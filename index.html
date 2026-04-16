@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คำนวณราคากระเป๋าผ้า Atnoon 2026</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Sarabun', 'Segoe UI', sans-serif;
+  background: #E8E2DB; 
+  color: #1A3263; 
+  min-height: 100vh;
+  padding: 16px;
+  padding-bottom: 40px; 
+}
+
+.container { max-width: 680px; margin: 0 auto; }
+
+.header {
+  text-align: center;
+  padding: 28px 20px 20px;
+  background: linear-gradient(135deg, #FAB95B 0%, #FCCC9A 100%);
+  border-radius: 20px;
+  color: #1A3263;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(250, 185, 91, 0.35);
+}
+.header h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; }
+.header p { font-size: 0.9rem; opacity: 0.8; }
+
+.card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 10px rgba(26, 50, 99, 0.05);
+  border: 1.5px solid #FAB95B;
+  transition: opacity 0.25s;
+}
+.card.locked { opacity: 0.4; pointer-events: none; }
+
+.step-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #547792; 
+  margin-bottom: 8px;
+}
+.card h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; color: #1A3263; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 2px solid rgba(250, 185, 91, 0.6);
+  background: #FFFFFF;
+  color: #1A3263;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.chip:hover { 
+  border-color: #FAB95B; 
+  background: rgba(250, 185, 91, 0.1); 
+}
+.chip.active { 
+  background: #FAB95B; 
+  border-color: #FAB95B; 
+  color: #1A3263;
+}
+
+.image-choice-card {
+  display: flex;
+  flex-direction: column;
+  width: calc(50% - 4px);
+  max-width: 140px;
+  border: 1.5px solid #E8E2DB;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.image-choice-card:hover { border-color: #FAB95B; }
+.image-choice-card.active { border-color: #A02040; }
+.image-choice-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background: #000000;
+  border-bottom: 1px solid #F0F0F0;
+}
+.image-choice-text {
+  padding: 10px 4px;
+  font-size: 0.85rem;
+  text-align: center;
+  font-weight: 600;
+  color: #1A3263;
+  line-height: 1.3;
+}
+.image-choice-card.active .image-choice-text { color: #A02040; }
+
+select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid rgba(250, 185, 91, 0.6);
+  background: #FFFFFF;
+  color: #1A3263;
+  font-size: 0.95rem;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23547792' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+select:focus { border-color: #FAB95B; }
+select:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.addon-group { margin-bottom: 14px; }
+.addon-group:last-child { margin-bottom: 0; }
+.addon-label { font-size: 0.88rem; font-weight: 700; color: #1A3263; margin-bottom: 6px; }
+.addon-note { font-size: 0.8rem; color: #547792; margin-bottom: 6px; margin-top: -4px; }
+
+.qty-wrap { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.qty-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(250, 185, 91, 0.6);
+  background: #FFFFFF;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #1A3263;
+  font-weight: 700;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.qty-btn:hover { border-color: #FAB95B; background: rgba(250, 185, 91, 0.1); }
+input[type=number] {
+  width: 90px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid rgba(250, 185, 91, 0.6);
+  font-size: 1.1rem;
+  font-family: inherit;
+  text-align: center;
+  color: #1A3263;
+  outline: none;
+  background: #FFFFFF;
+}
+input[type=number]:focus { border-color: #FAB95B; }
+.qty-hint { font-size: 0.83rem; color: #547792; margin-top: 10px; }
+.tier-badge {
+  display: inline-block;
+  background: rgba(250, 185, 91, 0.15);
+  border: 1px solid #FAB95B;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 0.83rem;
+  color: #1A3263;
+  font-weight: 600;
+}
+
+.special-note {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #FFFFFF;
+  border: 1.5px dashed #FAB95B;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: #1A3263;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.special-note svg { color: #FAB95B; flex-shrink: 0; }
+
+.result-card {
+  background: linear-gradient(135deg, #FAB95B 0%, #FCCC9A 100%);
+  color: #1A3263;
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 4px;
+  box-shadow: 0 4px 20px rgba(250, 185, 91, 0.4);
+}
+.result-card h3 { font-size: 1rem; opacity: 0.9; margin-bottom: 16px; }
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(26, 50, 99, 0.15);
+}
+.result-row:last-child { border-bottom: none; }
+.result-label { font-size: 0.92rem; opacity: 0.9; }
+.result-value { font-size: 1.1rem; font-weight: 700; text-align: right; }
+.result-addon-detail { font-size: 0.8rem; font-weight: 400; opacity: 0.8; display: block; }
+.result-total { font-size: 1.55rem; }
+.result-summary {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: #1A3263;
+  opacity: 0.95;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.action-buttons { display: flex; gap: 12px; margin-top: 14px; }
+.reset-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px solid #1A3263;
+  background: #FFFFFF;
+  color: #1A3263;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.reset-btn:hover { background: #1A3263; color: #FFFFFF; }
+
+.line-btn {
+  flex: 1.5;
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px solid #06C755;
+  background: #06C755;
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.line-btn:hover { background: #05B34C; border-color: #05B34C; box-shadow: 0 4px 15px rgba(6, 199, 85, 0.3); }
+
+.canvas-only-note {
+  display: inline-block;
+  background: rgba(250, 185, 91, 0.15);
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 0.88rem;
+  color: #1A3263;
+  font-weight: 600;
+  border: 1px solid #FAB95B;
+}
+.fabric-note { font-size: 0.8rem; color: #547792; margin-top: 8px; }
+.hidden { display: none !important; }
+
+#lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+}
+#lightbox.open { display: flex; }
+#lightbox img {
+  max-width: min(92vw, 480px);
+  max-height: 80vh;
+  border-radius: 12px;
+  object-fit: contain;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  background: #1a1a1a;
+}
+#lightbox-caption { color: #FFFFFF; font-size: 0.95rem; font-weight: 600; text-align: center; opacity: 0.9; }
+#lightbox-close {
+  position: absolute;
+  top: 16px; right: 20px;
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.8;
+}
+#lightbox-close:hover { opacity: 1; }
+.image-choice-img { cursor: zoom-in; }
+.zoom-hint { font-size: 0.72rem; color: #547792; text-align: center; margin-top: 2px; }
+
+.footer-note {
+  margin-top: 32px;
+  background: #1A3263;
+  color: #E8E2DB;
+  padding: 24px 20px;
+  border-radius: 20px;
+  text-align: left;
+  box-shadow: 0 4px 15px rgba(26, 50, 99, 0.1);
+}
+.footer-note .big-note { display: block; font-size: 1rem; font-weight: 800; color: #FAB95B; margin-bottom: 14px; text-align: center; }
+.footer-note .footer-text { font-size: 0.82rem; line-height: 1.7; opacity: 0.85; margin-bottom: 18px; word-break: keep-all; }
+.footer-note .footer-item { display: flex; gap: 8px; margin-bottom: 8px; }
+.footer-note .footer-item::before { content: "✦"; color: #FAB95B; }
+.footer-note .footer-contact { font-size: 0.85rem; line-height: 1.6; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 18px; }
+.footer-note .contact-line { margin-top: 10px; font-size: 0.95rem; font-weight: 700; }
+.footer-note a { color: #FAB95B; font-weight: 800; text-decoration: none; border-bottom: 1.5px solid #FAB95B; padding-bottom: 2px; }
+.footer-note a:hover { background: rgba(250, 185, 91, 0.1); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div id="lightbox">
+    <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightbox-img" src="" alt="">
+    <div id="lightbox-caption"></div>
+  </div>
+
+  <div class="header">
+    <h1>🛍️ คำนวณราคากระเป๋าผ้า</h1>
+    <p>Atnoon — ราคาปี 2026</p>
+  </div>
+
+  <div class="card" id="step1">
+    <div class="step-label">1 เลือกทรงกระเป๋า</div>
+    <div class="chips" id="shapeChips"></div>
+  </div>
+
+  <div class="card locked" id="step2">
+    <div class="step-label" id="step2Label">2 เลือกลักษณะ</div>
+    <div class="chips" id="subChips"></div>
+  </div>
+
+  <div class="card locked" id="step3">
+    <div class="step-label" id="step3Label">3 เลือกไซส์ (นิ้ว)</div>
+    <select id="sizeSelect">
+      <option value="">— กรุณาเลือกไซส์ —</option>
+    </select>
+  </div>
+
+  <div class="card locked" id="step4">
+    <div class="step-label">4 เลือกเนื้อผ้า</div>
+    <div id="fabricChoices">
+      <div class="chips" id="fabricChips">
+        <button class="chip" data-fabric="8oz">4.1 ผ้าดิบลายสอง 8 oz.</button>
+        <button class="chip" data-fabric="11oz">4.2 ผ้าดิบแคนวาส 11 oz. / ผ้าแคนวาสฟอก 10 oz.</button>
+      </div>
+      <div class="fabric-note">หมายเหตุ: ผ้าดิบแคนวาส 11 oz. และ ผ้าแคนวาสฟอก 10 oz. ราคาเดียวกัน</div>
+    </div>
+    <div id="canvasOnlyNote" class="hidden">
+      <span class="canvas-only-note">ทรงกล่องใช้ได้เฉพาะ ผ้าแคนวาส / ผ้าแคนวาสฟอก เท่านั้น ✓</span>
+    </div>
+  </div>
+
+  <div class="card locked" id="step5">
+    <div class="step-label" id="step5Label">5 การพิมพ์สายกระเป๋า</div>
+    <div class="chips" id="strapPrintChips"></div>
+    <div id="customizeToggleBox" class="hidden" style="margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(26,50,99,0.2);">
+      <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 700; color: #1A3263;">
+        <input type="checkbox" id="moreAddonsCheck" style="width: 20px; height: 20px; accent-color: #FAB95B;">
+        <span>➕ ต้องการ Customize ออปชั่นเสริมอื่นๆ เพิ่มเติม</span>
+      </label>
+      <div style="font-size: 0.82rem; color: #547792; margin-left: 28px; margin-top: 4px;">เช่น ความยาวสาย, ปากกระเป๋า, เลเบิล, กระเป๋าเล็กด้านใน ฯลฯ</div>
+    </div>
+  </div>
+
+  <div class="card hidden" id="step6">
+    <div class="step-label">6 เลือกออปชั่นเสริม (Add-on)</div>
+    <div id="addonContainer"></div>
+  </div>
+
+  <div class="card locked" id="step7">
+    <div class="step-label">7 กรอกจำนวน (ใบ)</div>
+    <div class="qty-wrap">
+      <button class="qty-btn" id="qtyMinus">−</button>
+      <input type="number" id="qtyInput" value="30" min="1" max="99999">
+      <button class="qty-btn" id="qtyPlus">+</button>
+    </div>
+    <div class="qty-hint" id="tierHint"><span class="tier-badge">เรท 30 ใบ ต่อ 1 แบบ*</span></div>
+    <div class="special-note">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+      พิเศษ! พิมพ์หน้า-หลังคนละรูปได้ ราคาเดิม
+    </div>
+  </div>
+
+  <div id="resultSection" class="hidden">
+    <div class="result-card">
+      <h3>💰 สรุปราคา</h3>
+      <div class="result-row">
+        <span class="result-label">ราคาต่อใบ</span>
+        <div class="result-value">
+          <span id="rPriceUnit">—</span>
+          <span class="result-addon-detail" id="rPriceDetail"></span>
+        </div>
+      </div>
+      <div class="result-row">
+        <span class="result-label">จำนวน</span>
+        <span class="result-value" id="rQty">—</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label" style="font-weight:700">ยอดรวม</span>
+        <span class="result-value result-total" id="rTotal">—</span>
+      </div>
+      <div class="result-summary" id="rSummary"></div>
+    </div>
+    <div class="action-buttons">
+      <button class="reset-btn" id="resetBtn">🔄 คำนวณใหม่</button>
+      <button class="line-btn" id="lineShareBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 10.304c0-5.369-5.383-9.738-12-9.738-6.616 0-12 4.369-12 9.738 0 4.814 4.269 8.846 10.036 9.608.391.084.922.258 1.057.592.122.303.079.778.039 1.085l-.171 1.027c-.053.303-.242 1.186 1.039.647 1.281-.54 6.911-4.069 9.428-6.967 1.739-1.907 2.572-3.843 2.572-5.992z"/></svg>
+        ส่งสรุปไปที่ LINE
+      </button>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <div class="big-note">★ ผลิตหลังยืนยันแบบและชำระยอดเต็มเท่านั้น ★</div>
+    <div class="footer-text">
+      <div class="footer-item">เรทส่งเริ่ม 30 ใบขึ้นไปต่อ 1 แบบ</div>
+      <div class="footer-item">ราคานี้สำหรับลูกค้าที่มีไฟล์พร้อมพิมพ์/ส่งรูปมาพิมพ์เองเท่านั้น</div>
+      <div class="footer-item"><strong style="color:#FAB95B;">* จำนวนต่อ 1 แบบ ไม่คละลาย</strong></div>
+      <div class="footer-item">ราคาไม่รวมค่าจัดส่ง</div>
+    </div>
+    <div class="footer-contact">
+      <div>⏱︎ ระยะเวลาผลิตออเดอร์ 30 ใบ ประมาณ 10 วัน (หรือตามตกลง) หลังยืนยันแบบ และชำระยอดเต็ม</div>
+      <div class="contact-line">สอบถาม/ส่งรูปมาวางแบบฟรีที่ LINE: <a href="https://lin.ee/p1zpP1K" target="_blank">@ATNOON</a></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SHAPES = [
+  { key: 'tote_v',     label: '1.1 Tote แนวตั้ง' },
+  { key: 'tote_h',     label: '1.2 Tote แนวนอน' },
+  { key: 'beach',      label: '1.3 Beach Tote ก้นใหญ่' },
+  { key: 'drawstring', label: '1.4 ถุงผ้าหูรูด' },
+  { key: 'yeti',       label: '1.5 กระเป๋าแก้วเยติ' },
+  { key: 'pencil',     label: '1.6 กระเป๋าซิปดินสอ' },
+  { key: 'box',        label: '1.7 กระเป๋าทรงกล่อง' },
+];
+
+const STEP2_CONFIG = {
+  tote_v:     { title: 'เลือกแบบก้น', opts: [{ l:'2.1 ขยายก้น', v:'exp' }, { l:'2.2 ไม่ขยายก้น', v:'noexp' }] },
+  tote_h:     { title: 'เลือกแบบก้น', opts: [{ l:'2.1 ขยายก้น', v:'exp' }, { l:'2.2 ไม่ขยายก้น', v:'noexp' }] },
+  drawstring: { title: 'เลือกประเภทสาย', opts: [{ l:'สายกลมขาว', v:'round' }, { l:'สายก้างปลาแบนครีม', v:'fish' }] },
+  pencil:     { title: 'เลือกแบบก้น', opts: [{ l:'ขยายก้น', v:'exp' }, { l:'ไม่ขยายก้น', v:'noexp' }] },
+};
+const NO_STEP2 = new Set(['beach', 'yeti', 'box']);
+
+const DB = {
+  tote_v_exp: [
+    { s:'8×8×2',      p8:[80,75,73,70,65,55],       p11:[125,120,118,115,115,100] },
+    { s:'8×10×2',     p8:[82,80,78,75,70,60],       p11:[127,122,120,117,117,102] },
+    { s:'8×11×2',     p8:[86,80,78,75,70,60],       p11:[131,126,124,121,121,106] },
+    { s:'10×11×2',    p8:[88,85,83,80,75,65],       p11:[133,128,126,123,123,108] },
+    { s:'12×14×2',    p8:[93,90,88,85,80,70],       p11:[143,138,136,133,133,118] },
+    { s:'14×14×2',    p8:[94,90,88,85,80,70],       p11:[144,139,137,134,134,119] },
+    { s:'14×15.5×3',  p8:[95,90,88,85,80,70],       p11:[145,140,138,135,135,120] },
+    { s:'14×18×3',    p8:[103,95,93,90,85,75],      p11:[153,148,146,143,138,128] },
+    { s:'16×18×4',    p8:[112,105,103,100,95,85],   p11:[167,162,160,157,152,142] },
+    { s:'18×20×4',    p8:[130,125,123,120,115,105], p11:[185,180,178,175,170,160] },
+  ],
+  tote_v_noexp: [
+    { s:'8×8',    p8:[80,75,73,70,65,55],       p11:[125,120,118,115,115,100] },
+    { s:'8×10',   p8:[82,80,78,75,70,60],       p11:[127,122,120,117,117,102] },
+    { s:'8×12',   p8:[86,80,78,75,70,60],       p11:[131,126,124,121,121,106] },
+    { s:'10×12',  p8:[88,85,83,80,75,65],       p11:[133,128,126,123,123,108] },
+    { s:'11×12',  p8:[85,90,88,85,80,70],       p11:[105,100,98,95,95,80] },
+    { s:'12×14',  p8:[93,90,88,85,80,70],       p11:[143,138,136,133,133,118] },
+    { s:'14×14',  p8:[94,90,88,85,80,70],       p11:[144,139,137,134,134,119] },
+    { s:'14×16',  p8:[95,90,88,85,80,70],       p11:[145,140,138,135,130,120] },
+    { s:'15×16',  p8:[105,100,98,95,90,80],     p11:[125,120,118,115,110,100] },
+    { s:'16×18',  p8:[112,105,103,100,95,85],   p11:[167,162,160,157,152,142] },
+    { s:'18×20',  p8:[130,125,123,120,115,105], p11:[185,180,178,175,170,160] },
+  ],
+  tote_h_exp: [
+    { s:'10×8×2',    p8:[82,80,78,75,70,60],       p11:[127,122,120,117,112,102] },
+    { s:'11×10×2',   p8:[86,80,78,75,70,60],       p11:[131,126,124,121,116,106] },
+    { s:'12×8×2',    p8:[86,80,78,75,70,60],       p11:[131,126,124,121,116,106] },
+    { s:'12×10×2',   p8:[88,85,83,80,75,65],       p11:[133,128,126,123,118,108] },
+    { s:'12×11×2',   p8:[90,85,83,80,75,65],       p11:[135,130,128,125,120,110] },
+    { s:'13×10×2',   p8:[91,85,83,80,75,65],       p11:[141,136,134,131,126,116] },
+    { s:'14×11×2',   p8:[92,85,83,80,75,65],       p11:[142,137,135,132,127,117] },
+    { s:'16×14×3',   p8:[98,90,88,85,80,70],       p11:[148,143,141,138,133,123] },
+    { s:'16×15.5×3', p8:[104,100,98,95,90,80],     p11:[154,149,147,144,139,129] },
+    { s:'18×15.5×3', p8:[107,100,98,95,90,80],     p11:[162,157,155,152,147,137] },
+    { s:'18×18×4',   p8:[112,105,103,100,95,85],   p11:[167,162,160,157,152,142] },
+    { s:'20×18×4',   p8:[130,125,123,120,115,105], p11:[185,180,178,175,170,160] },
+  ],
+  tote_h_noexp: [
+    { s:'10×8',  p8:[82,80,78,75,70,60],       p11:[127,122,120,117,112,102] },
+    { s:'12×8',  p8:[86,80,78,75,70,60],       p11:[131,126,124,121,116,106] },
+    { s:'12×10', p8:[88,85,83,80,75,65],       p11:[133,128,126,123,118,108] },
+    { s:'12×11', p8:[90,85,83,80,75,65],       p11:[145,140,138,135,130,120] },
+    { s:'12×12', p8:[91,85,83,80,75,65],       p11:[141,136,134,131,126,116] },
+    { s:'14×12', p8:[92,85,83,80,75,65],       p11:[142,137,135,132,127,117] },
+    { s:'16×14', p8:[98,95,93,90,85,75],       p11:[148,143,141,138,133,123] },
+    { s:'16×16', p8:[104,100,98,95,90,80],     p11:[154,149,147,144,139,129] },
+    { s:'18×14', p8:[106,100,98,95,90,80],     p11:[161,156,154,151,146,136] },
+    { s:'18×16', p8:[112,105,103,100,95,85],   p11:[167,162,160,157,152,142] },
+    { s:'20×18', p8:[130,125,123,120,115,105], p11:[185,180,178,175,170,160] },
+  ],
+  beach: [
+    { s:'10×7×4',  p8:[83,80,78,75,70,60],       p11:[128,123,121,118,113,103] },
+    { s:'12×8×5',  p8:[87,82,80,77,72,62],       p11:[135,130,128,125,120,110] },
+    { s:'14×10×5', p8:[91,85,83,80,75,65],       p11:[141,136,134,131,126,116] },
+    { s:'16×11×6', p8:[96,87,85,82,77,67],       p11:[149,144,142,139,134,124] },
+    { s:'18×12×7', p8:[100,95,93,90,85,75],      p11:[160,155,153,150,145,135] },
+    { s:'20×13×7', p8:[130,125,123,120,115,105], p11:[185,180,178,175,170,160] },
+  ],
+  draw_round: [
+    { s:'5×6',   p8:[55,75,73,70,65,55],   p11:[75,70,68,65,60,50] },
+    { s:'6×7',   p8:[60,75,73,70,65,55],   p11:[80,75,73,70,65,55] },
+    { s:'7×8',   p8:[65,80,78,75,70,60],   p11:[85,80,78,75,70,60] },
+    { s:'8×9',   p8:[70,80,78,75,70,60],   p11:[90,85,83,80,75,65] },
+    { s:'9×10',  p8:[75,85,83,80,75,65],   p11:[95,90,88,85,80,70] },
+    { s:'10×11', p8:[80,85,83,80,75,65],   p11:[100,95,93,90,85,75] },
+    { s:'11×12', p8:[85,90,88,85,80,70],   p11:[105,100,98,95,90,80] },
+    { s:'12×13', p8:[90,95,93,90,85,75],   p11:[110,105,103,100,95,85] },
+    { s:'13×14', p8:[95,95,93,90,85,75],   p11:[115,110,108,105,100,90] },
+    { s:'14×15', p8:[100,100,98,95,90,80], p11:[120,115,113,110,105,95] },
+    { s:'15×16', p8:[105,100,98,95,90,80], p11:[125,120,118,115,110,100] },
+  ],
+  draw_fish: [
+    { s:'5×6',   p8:[55,75,73,70,65,55],   p11:[75,70,68,65,60,50] },
+    { s:'6×7',   p8:[60,75,73,70,65,55],   p11:[80,75,73,70,65,55] },
+    { s:'7×8',   p8:[65,80,78,75,70,60],   p11:[85,80,78,75,70,60] },
+    { s:'8×9',   p8:[70,80,78,75,70,60],   p11:[90,85,83,80,75,65] },
+    { s:'9×10',  p8:[75,85,83,80,75,65],   p11:[95,90,88,85,80,70] },
+    { s:'10×11', p8:[80,85,83,80,75,65],   p11:[100,95,93,90,85,75] },
+    { s:'11×12', p8:[85,90,88,85,80,70],   p11:[105,100,98,95,90,80] },
+    { s:'12×13', p8:[90,95,93,90,85,75],   p11:[110,105,103,100,95,85] },
+    { s:'13×14', p8:[95,95,93,90,85,75],   p11:[115,110,108,105,100,90] },
+    { s:'14×15', p8:[100,100,98,95,90,80], p11:[120,115,113,110,105,95] },
+    { s:'15×16', p8:[105,100,98,95,90,80], p11:[125,120,118,115,110,100] },
+  ],
+  yeti: [
+    { s:'4.5×8×3.5', p8:[90,85,83,80,80,65], p11:[145,140,138,135,130,120] },
+  ],
+  pencil_exp: [
+    { s:'8×5×1.5', p8:[90,85,83,80,80,65], p11:[145,140,138,135,130,120] },
+    { s:'8×4×1.5', p8:[90,85,83,80,80,65], p11:[145,140,138,135,130,120] },
+  ],
+  pencil_noexp: [
+    { s:'8×5', p8:[85,80,78,75,75,60], p11:[140,135,133,130,125,115] },
+    { s:'8×4', p8:[85,80,78,75,75,60], p11:[140,135,133,130,125,115] },
+  ],
+  box: [
+    { s:'8×10×4×4',  p8:null, p11:[170,165,163,160,160,145] },
+    { s:'12×10×4×4', p8:null, p11:[180,175,173,170,170,155] },
+    { s:'10×12×4×4', p8:null, p11:[180,175,173,170,170,155] },
+    { s:'14×11×4×4', p8:null, p11:[190,185,183,180,180,165] },
+    { s:'12×14×4×4', p8:null, p11:[190,185,183,180,180,165] },
+    { s:'16×14×4×4', p8:null, p11:[210,205,203,200,200,185] },
+    { s:'14×16×4×4', p8:null, p11:[210,205,203,200,200,185] },
+    { s:'18×16×4×4', p8:null, p11:[220,215,213,210,210,195] },
+  ],
+};
+
+const FABRIC_LABELS = { '8oz': 'ผ้าดิบลายสอง 8 oz.', '11oz': 'ผ้าแคนวาส/แคนวาสฟอก' };
+const SUB_LABELS = { exp:'ขยายก้น', noexp:'ไม่ขยายก้น', round:'สายกลมขาว', fish:'สายก้างปลาแบนครีม' };
+
+const ADDONS_CONFIG = [
+  { id:'strap_len', title:'6.1 สายกระเป๋า (ความยาว)', note:'ปกติประมาณ 21.5 นิ้ว', condition:['tote_v','tote_h','beach','box'], options:[{label:'6.1.1 เพิ่ม 2/4/6 นิ้ว (+5฿)',price:5},{label:'6.1.2 เพิ่ม 8/10 นิ้ว (+10฿)',price:10}] },
+  { id:'mouth_norm', title:'6.2 ปากกระเป๋า', condition:['tote_v','tote_h','beach'], options:[{label:'6.2.1 มีซิป (+15฿)',price:15},{label:'6.2.2 ตีนตุ๊กแก (+5฿)',price:5},{label:'6.2.3 กระดุมแม่เหล็ก (+25฿)',price:25}] },
+  { id:'mouth_box', title:'6.2 ปากกระเป๋า', condition:['box'], options:[{label:'6.2.1 ตีนตุ๊กแก (+5฿)',price:5},{label:'6.2.2 กระดุมแม่เหล็ก (+25฿)',price:25},{label:'6.2.3 มีซิป (กป.ทรงกล่อง) (+25฿)',price:25}] },
+  { id:'label', title:'6.3 เลเบิล', note:'(ลูกค้าส่งเลเบิลมาเอง)', condition:['tote_v','tote_h','beach','drawstring','yeti','pencil','box'], options:[{label:'6.3.1 มี (+5฿)',price:5}] },
+  { id:'inner_pocket', title:'6.4 กระเป๋าเล็กด้านใน', note:'ขนาด 5×6 นิ้ว มีกุ๊นขอบ', condition:['tote_v','tote_h','beach','box'] },
+  { id:'crossbody', title:'6.5 สาย Crossbody', note:'ระยะเวลาผลิตเพิ่ม 7 วัน | ปรับสาย 67-125 ซม', condition:['tote_v','tote_h','beach'], options:[{label:'6.5.1 เย็บติด (+100฿)',price:100},{label:'6.5.2 มีตะขอ (+110฿)',price:110}], hasSub:true, subId:'crossbody_print', subTitle:'↳ การพิมพ์สาย Crossbody', subOptions:[{label:'พิมพ์สี (+10฿)',price:10}] },
+  { id:'side_pocket', title:'6.6 ช่องด้านข้างทรงกล่อง', condition:['box'], options:[{label:'6.6.1 1 ด้าน ช่องใหญ่ (+20฿)',price:20},{label:'6.6.2 1 ด้าน 2 ช่องเล็ก (+20฿)',price:20},{label:'6.6.3 2 ด้าน ช่องใหญ่ (+40฿)',price:40},{label:'6.6.4 2 ด้าน 2 ช่องเล็ก (+40฿)',price:40}] }
+];
+
+let S = { shape:null,sub:null,size:null,fabric:null,strapPrintPrice:null,strapPrintLabel:null,strapSubPrice:null,strapSubLabel:null,addons:{},addonLabels:{} };
+
+const $ = id => document.getElementById(id);
+function lock(id,v=true){$(id).classList.toggle('locked',v);}
+function clearActive(sel){document.querySelectorAll(sel).forEach(e=>e.classList.remove('active'));}
+
+function getDbKey(){
+  const{shape,sub}=S;
+  if(shape==='tote_v') return sub==='exp'?'tote_v_exp':sub==='noexp'?'tote_v_noexp':null;
+  if(shape==='tote_h') return sub==='exp'?'tote_h_exp':sub==='noexp'?'tote_h_noexp':null;
+  if(shape==='beach') return 'beach';
+  if(shape==='drawstring') return sub==='round'?'draw_round':sub==='fish'?'draw_fish':null;
+  if(shape==='yeti') return 'yeti';
+  if(shape==='pencil') return sub==='exp'?'pencil_exp':sub==='noexp'?'pencil_noexp':null;
+  if(shape==='box') return 'box';
+  return null;
+}
+
+function getTierIndex(qty){
+  if(qty<100) return 0;
+  if(qty<200) return 1;
+  if(qty<300) return 2;
+  if(qty<500) return 3;
+  if(qty<1000) return 4;
+  return 5;
+}
+function getTierLabel(qty){
+  return['เรท 30 ใบ','เรท 100 ใบ','เรท 200 ใบ','เรท 300 ใบ','เรท 500 ใบ','เรท 1,000 ใบ'][getTierIndex(qty)]+' ต่อ 1 แบบ*';
+}
+
+function parseSize(s){if(!s)return null;const parts=s.split('×').map(Number);return{w:parts[0],h:parts[1],str:s};}
+
+function findSimilarSize(oldSize,oldKey,newKey){
+  if(!oldSize||!oldKey||!newKey||!DB[newKey]||!DB[oldKey])return null;
+  if(DB[newKey].some(r=>r.s===oldSize))return oldSize;
+  const oldDim=parseSize(oldSize);
+  const oldRow=DB[oldKey].find(r=>r.s===oldSize);
+  if(!oldRow)return null;
+  const oldPrice=oldRow.p11[0];
+  const samePriceRows=DB[newKey].filter(r=>r.p11[0]===oldPrice);
+  if(samePriceRows.length>0){
+    if(samePriceRows.length===1)return samePriceRows[0].s;
+    if(S.shape==='tote_h'){const wMatch=samePriceRows.find(r=>parseSize(r.s).w===oldDim.w);if(wMatch)return wMatch.s;}
+    else if(S.shape==='tote_v'){const hMatch=samePriceRows.find(r=>parseSize(r.s).h===oldDim.h);if(hMatch)return hMatch.s;}
+    return samePriceRows[0].s;
+  }
+  let bestMatch=null;
+  if(S.shape==='tote_h')bestMatch=DB[newKey].find(r=>parseSize(r.s).w===oldDim.w);
+  else if(S.shape==='tote_v')bestMatch=DB[newKey].find(r=>parseSize(r.s).h===oldDim.h);
+  return bestMatch?bestMatch.s:null;
+}
+
+(function buildShapeButtons(){
+  const container=$('shapeChips');
+  SHAPES.forEach(sh=>{
+    const btn=document.createElement('button');
+    btn.className='chip';
+    btn.dataset.shape=sh.key;
+    btn.textContent=sh.label;
+    container.appendChild(btn);
+  });
+})();
+
+function renderStep2(){
+  const cfg=STEP2_CONFIG[S.shape];
+  $('step2Label').textContent='2 '+cfg.title;
+  const chips=$('subChips');
+  chips.innerHTML='';
+  cfg.opts.forEach(o=>{
+    const btn=document.createElement('button');
+    btn.className='chip'+(S.sub===o.v?' active':'');
+    btn.textContent=o.l;
+    btn.onclick=()=>{
+      const oldSize=S.size;const oldKey=getDbKey();S.sub=o.v;const newKey=getDbKey();
+      clearActive('#subChips .chip');btn.classList.add('active');lock('step3',false);
+      S.size=findSimilarSize(oldSize,oldKey,newKey);renderSizeDropdown();
+      if(!S.size){$('sizeSelect').value='';S.fabric=null;clearActive('#fabricChips .chip');['step4','step5','step7'].forEach(id=>lock(id,true));$('step6').classList.add('hidden');hideResult();}
+      else{$('sizeSelect').value=S.size;lock('step4',false);if(!S.fabric)S.fabric=(S.shape==='box')?'11oz':'8oz';renderFabric();renderStep5(true);}
+    };
+    chips.appendChild(btn);
+  });
+  lock('step2',false);
+}
+
+function getSizeHint(){
+  const sh=S.shape;
+  if(sh==='drawstring'||(sh==='pencil'&&S.sub!=='exp')||((sh==='tote_v'||sh==='tote_h')&&S.sub==='noexp'))return'(กว้าง×สูง)';
+  if(sh==='box')return'(กว้าง×สูง×ก้น×ข้าง)';
+  return'(กว้าง×สูง×ก้น)';
+}
+
+function renderSizeDropdown(){
+  const key=getDbKey();const sel=$('sizeSelect');const hint=getSizeHint();
+  sel.innerHTML='<option value="">— กรุณาเลือกไซส์ — '+hint+'</option>';
+  if($('step3Label'))$('step3Label').textContent='3 เลือกไซส์ (นิ้ว) '+hint;
+  if(!key)return;
+  DB[key].forEach(row=>{const opt=document.createElement('option');opt.value=row.s;opt.textContent=row.s+' นิ้ว';if(row.s===S.size)opt.selected=true;sel.appendChild(opt);});
+}
+
+function renderFabric(){
+  const isBox=S.shape==='box';
+  $('fabricChoices').classList.toggle('hidden',isBox);
+  $('canvasOnlyNote').classList.toggle('hidden',!isBox);
+  clearActive('#fabricChips .chip');
+  if(isBox){S.fabric='11oz';}
+  else if(S.fabric){const btn=document.querySelector('#fabricChips .chip[data-fabric="'+S.fabric+'"]');if(btn)btn.classList.add('active');}
+}
+
+function renderStep5(preserve=false){
+  if(!preserve){S.strapPrintPrice=null;S.strapPrintLabel=null;S.strapSubPrice=0;S.strapSubLabel='';S.addons={};S.addonLabels={};$('moreAddonsCheck').checked=false;}
+  const chips=$('strapPrintChips');chips.innerHTML='';const toggleBox=$('customizeToggleBox');
+  let opts=[];
+  if(['tote_v','tote_h','beach','yeti','box'].includes(S.shape)){
+    $('step5Label').textContent='5 การพิมพ์สายกระเป๋า';
+    if(S.shape==='yeti'){opts=[{l:'5.1 สายขาวปกติ',v:0,img:'https://drive.google.com/thumbnail?id=1DIexNJip_XDzAZs6DaZEkjJnNh0urmZW&sz=w300',full:'https://drive.google.com/thumbnail?id=1DIexNJip_XDzAZs6DaZEkjJnNh0urmZW&sz=w1200'},{l:'5.2 พิมพ์สี (+10฿)',v:10,img:'https://drive.google.com/thumbnail?id=180e9_ICnxGEPATIn9rsRRkAXWOWrktfv&sz=w300',full:'https://drive.google.com/thumbnail?id=180e9_ICnxGEPATIn9rsRRkAXWOWrktfv&sz=w1200'}];}
+    else{opts=[{l:'5.1 สายขาวปกติ ไม่พิมพ์',v:0},{l:'5.2 พิมพ์สี (+10฿)',v:10},{l:'5.3 พิมพ์ 2 สี เส้นละสี (+15฿)',v:15}];}
+  } else if(S.shape==='pencil'){
+    $('step5Label').textContent='5 สายกระเป๋าดินสอ';
+    opts=[{l:'5.1 ไม่มีสายคล้องข้อมือ',v:0},{l:'5.2 มีสายคล้องข้อมือ (+5฿)',v:5,hasSub:true,subTitle:'↳ การพิมพ์สีสายคล้อง',subOpts:[{l:'สายขาวปกติ ไม่พิมพ์',v:0},{l:'พิมพ์สี (+5฿)',v:5}]}];
+  }
+  if(opts.length>0){
+    $('step5Label').style.display='block';
+    const mainContainer=document.createElement('div');mainContainer.className='chips';chips.appendChild(mainContainer);
+    const subContainerWrapper=document.createElement('div');subContainerWrapper.className='addon-sub-group hidden';subContainerWrapper.style.cssText='margin-top:12px;padding-left:16px;border-left:2.5px solid #FAB95B;';chips.appendChild(subContainerWrapper);
+    opts.forEach((o,idx)=>{
+      const el=document.createElement('div');
+      let isActive=false;
+      if(preserve&&S.strapPrintPrice===o.v&&S.strapPrintLabel===o.l)isActive=true;
+      else if(!preserve&&idx===0)isActive=true;
+      else if(preserve&&S.strapPrintPrice===null&&idx===0)isActive=true;
+      if(isActive){S.strapPrintPrice=o.v;S.strapPrintLabel=o.l;}
+      if(o.img){
+        el.className='image-choice-card'+(isActive?' active':'');
+        el.innerHTML='<img class="image-choice-img" src="'+o.img+'" alt="'+o.l+'" data-full="'+(o.full||o.img)+'" data-caption="'+o.l+'" onerror="this.src=\'https://placehold.co/150x200/E8E2DB/1A3263?text=Image\'"><div class="image-choice-text">'+o.l+'</div><div class="zoom-hint">🔍 แตะรูปเพื่อดูขยาย</div>';
+        el.querySelector('img').addEventListener('click',(e)=>{e.stopPropagation();openLightbox(o.full||o.img,o.l);});
+      } else {el.className='chip'+(isActive?' active':'');el.textContent=o.l;}
+      el.onclick=(e)=>{
+        if(e.target.tagName==='IMG')return;
+        S.strapPrintPrice=o.v;S.strapPrintLabel=o.l;
+        clearActive('#strapPrintChips .chip:not(.sub-chip), #strapPrintChips .image-choice-card');el.classList.add('active');
+        if(o.hasSub){
+          subContainerWrapper.innerHTML='';
+          const subLabel=document.createElement('div');subLabel.className='addon-label';subLabel.style.fontSize='0.82rem';subLabel.textContent=o.subTitle;subContainerWrapper.appendChild(subLabel);
+          const subChips=document.createElement('div');subChips.className='chips';subContainerWrapper.appendChild(subChips);
+          o.subOpts.forEach((subO,subIdx)=>{const subBtn=document.createElement('button');subBtn.className='chip sub-chip'+(subIdx===0?' active':'');subBtn.textContent=subO.l;subBtn.onclick=()=>{S.strapSubPrice=subO.v;S.strapSubLabel=subO.l;clearActive('#strapPrintChips .sub-chip');subBtn.classList.add('active');renderResult();};subChips.appendChild(subBtn);});
+          S.strapSubPrice=o.subOpts[0].v;S.strapSubLabel=o.subOpts[0].l;subContainerWrapper.classList.remove('hidden');
+        } else {subContainerWrapper.classList.add('hidden');S.strapSubPrice=0;S.strapSubLabel='';}
+        renderResult();
+      };
+      mainContainer.appendChild(el);
+      if(o.hasSub&&isActive){
+        const subLabel=document.createElement('div');subLabel.className='addon-label';subLabel.style.fontSize='0.82rem';subLabel.textContent=o.subTitle;subContainerWrapper.appendChild(subLabel);
+        const subChips=document.createElement('div');subChips.className='chips';subContainerWrapper.appendChild(subChips);
+        o.subOpts.forEach((subO,subIdx)=>{
+          let isSubActive=false;
+          if(preserve&&S.strapSubPrice===subO.v&&S.strapSubLabel===subO.l)isSubActive=true;
+          else if(!preserve&&subIdx===0)isSubActive=true;
+          else if(preserve&&S.strapSubPrice===null&&subIdx===0)isSubActive=true;
+          if(isSubActive){S.strapSubPrice=subO.v;S.strapSubLabel=subO.l;}
+          const subBtn=document.createElement('button');subBtn.className='chip sub-chip'+(isSubActive?' active':'');subBtn.textContent=subO.l;
+          subBtn.onclick=()=>{S.strapSubPrice=subO.v;S.strapSubLabel=subO.l;clearActive('#strapPrintChips .sub-chip');subBtn.classList.add('active');renderResult();};
+          subChips.appendChild(subBtn);
+        });
+        subContainerWrapper.classList.remove('hidden');
+      }
+    });
+    toggleBox.classList.remove('hidden');
+  } else {
+    $('step5Label').textContent='5 ออปชั่นเสริม';$('step5Label').style.display='block';S.strapPrintPrice=0;S.strapPrintLabel='';toggleBox.classList.remove('hidden');
+  }
+  if($('moreAddonsCheck').checked){$('step6').classList.remove('hidden');renderAddons(preserve);}
+  else{$('step6').classList.add('hidden');}
+  lock('step5',false);lock('step7',false);renderResult();
+}
+
+function renderAddons(preserve=false){
+  const container=$('addonContainer');container.innerHTML='';
+  if(!preserve){S.addons={};S.addonLabels={};}
+  let hasAddons=false;
+  ADDONS_CONFIG.forEach(cfg=>{
+    if(cfg.condition.includes(S.shape)){
+      hasAddons=true;
+      const group=document.createElement('div');group.className='addon-group';
+      const label=document.createElement('div');label.className='addon-label';label.textContent=cfg.title;group.appendChild(label);
+      if(cfg.note){const note=document.createElement('div');note.className='addon-note';note.textContent=cfg.note;group.appendChild(note);}
+      if(cfg.id==='inner_pocket'){
+        const mainSel=document.createElement('select');mainSel.innerHTML='<option value="no">— ไม่เพิ่ม —</option><option value="yes">เพิ่มกระเป๋าเล็กด้านใน</option>';group.appendChild(mainSel);
+        const subGroup=document.createElement('div');subGroup.className='addon-sub-group hidden';subGroup.style.cssText='margin-top:10px;padding-left:16px;border-left:2.5px solid #FAB95B;display:flex;flex-direction:column;gap:10px;';
+        const fabWrap=document.createElement('div');const fabLabel=document.createElement('div');fabLabel.className='addon-label';fabLabel.style.fontSize='0.82rem';fabLabel.textContent='↳ ชนิดผ้า';const fabSel=document.createElement('select');
+        const populateFabrics=(isPreserving=false)=>{
+          fabSel.innerHTML='';
+          const options=[{val:20,l:'ผ้าโซล่อน (+20฿)',id:'solon'},{val:30,l:'ผ้าดิบลายสอง (+30฿)',id:'8oz'}];
+          if(S.fabric==='11oz'||S.shape==='box')options.push({val:40,l:'แคนวาส / แคนวาสฟอก (+40฿)',id:'11oz'});
+          options.forEach(o=>{const opt=document.createElement('option');opt.value=o.val;opt.textContent=o.l;opt.dataset.label='กป.เล็ก '+o.l.split(' (+')[0];fabSel.appendChild(opt);});
+          if(isPreserving&&S.addons['inner_pocket_fab']!==undefined){fabSel.value=S.addons['inner_pocket_fab'];if(!fabSel.value)fabSel.value=(S.fabric==='8oz')?30:40;}
+          else{fabSel.value=(S.fabric==='8oz')?30:40;}
+        };
+        fabWrap.appendChild(fabLabel);fabWrap.appendChild(fabSel);subGroup.appendChild(fabWrap);
+        const printWrap=document.createElement('div');const printLabel=document.createElement('div');printLabel.className='addon-label';printLabel.style.fontSize='0.82rem';printLabel.textContent='↳ การพิมพ์ลายกระเป๋าเล็ก';
+        const printSel=document.createElement('select');printSel.innerHTML='<option value="0" data-label="">— ไม่พิมพ์ลาย —</option><option value="10" data-label="พิมพ์ลายกป.เล็ก">พิมพ์ลาย (+10฿)</option>';
+        printWrap.appendChild(printLabel);printWrap.appendChild(printSel);subGroup.appendChild(printWrap);group.appendChild(subGroup);
+        const updateInnerState=()=>{
+          if(mainSel.value==='yes'){
+            subGroup.classList.remove('hidden');S.addons['inner_pocket_fab']=parseInt(fabSel.value)||0;const fabOpt=fabSel.options[fabSel.selectedIndex];S.addonLabels['inner_pocket_fab']=fabOpt?fabOpt.dataset.label:'';
+            S.addons['inner_pocket_print']=parseInt(printSel.value)||0;const printOpt=printSel.options[printSel.selectedIndex];S.addonLabels['inner_pocket_print']=(printOpt&&printSel.value!=='0')?printOpt.dataset.label:'';
+          } else {subGroup.classList.add('hidden');S.addons['inner_pocket_fab']=0;S.addons['inner_pocket_print']=0;S.addonLabels['inner_pocket_fab']='';S.addonLabels['inner_pocket_print']='';}
+          renderResult();
+        };
+        if(preserve&&(S.addons['inner_pocket_fab']>0||S.addons['inner_pocket_print']>0||S.addonLabels['inner_pocket_fab'])){mainSel.value='yes';populateFabrics(true);subGroup.classList.remove('hidden');if(S.addons['inner_pocket_print']!==undefined)printSel.value=S.addons['inner_pocket_print'];updateInnerState();}
+        else{mainSel.value='no';if(!preserve){S.addons['inner_pocket_fab']=0;S.addons['inner_pocket_print']=0;S.addonLabels['inner_pocket_fab']='';S.addonLabels['inner_pocket_print']='';}}
+        mainSel.addEventListener('change',()=>{if(mainSel.value==='yes')populateFabrics(false);updateInnerState();});
+        fabSel.addEventListener('change',updateInnerState);printSel.addEventListener('change',updateInnerState);
+      } else {
+        const sel=document.createElement('select');sel.dataset.id=cfg.id;
+        const defaultOpt=document.createElement('option');defaultOpt.value=0;defaultOpt.textContent='— ไม่เพิ่ม —';defaultOpt.dataset.label='';sel.appendChild(defaultOpt);
+        cfg.options.forEach(opt=>{const o=document.createElement('option');o.value=opt.price;o.textContent=opt.label;o.dataset.label=opt.label;sel.appendChild(o);});
+        if(preserve&&S.addons[cfg.id]!==undefined){sel.value=S.addons[cfg.id];const selectedOpt=sel.options[sel.selectedIndex];S.addonLabels[cfg.id]=selectedOpt?selectedOpt.dataset.label:'';}
+        else{S.addons[cfg.id]=0;S.addonLabels[cfg.id]='';sel.value=0;}
+        group.appendChild(sel);
+        let subGroup=null;let subSel=null;
+        if(cfg.hasSub){
+          subGroup=document.createElement('div');subGroup.className='addon-sub-group hidden';subGroup.style.cssText='margin-top:10px;padding-left:16px;border-left:2.5px solid #FAB95B;';
+          const subLabel=document.createElement('div');subLabel.className='addon-label';subLabel.style.fontSize='0.82rem';subLabel.textContent=cfg.subTitle;subGroup.appendChild(subLabel);
+          subSel=document.createElement('select');subSel.dataset.id=cfg.subId;
+          const subDefaultOpt=document.createElement('option');subDefaultOpt.value=0;subDefaultOpt.textContent='— ไม่เพิ่ม —';subDefaultOpt.dataset.label='';subSel.appendChild(subDefaultOpt);
+          cfg.subOptions.forEach(opt=>{const o=document.createElement('option');o.value=opt.price;o.textContent=opt.label;o.dataset.label=opt.label;subSel.appendChild(o);});
+          if(preserve&&S.addons[cfg.subId]!==undefined){subSel.value=S.addons[cfg.subId];const selectedOpt=subSel.options[subSel.selectedIndex];S.addonLabels[cfg.subId]=selectedOpt?selectedOpt.dataset.label:'';if(sel.value>0)subGroup.classList.remove('hidden');}
+          else{S.addons[cfg.subId]=0;S.addonLabels[cfg.subId]='';subSel.value=0;}
+          subSel.addEventListener('change',(e)=>{S.addons[cfg.subId]=parseInt(e.target.value)||0;const selectedOpt=e.target.options[e.target.selectedIndex];S.addonLabels[cfg.subId]=selectedOpt.dataset.label;renderResult();});
+          subGroup.appendChild(subSel);group.appendChild(subGroup);
+        }
+        sel.addEventListener('change',(e)=>{
+          const val=parseInt(e.target.value)||0;S.addons[cfg.id]=val;const selectedOpt=e.target.options[e.target.selectedIndex];S.addonLabels[cfg.id]=selectedOpt.dataset.label;
+          if(cfg.hasSub&&subGroup&&subSel){if(val>0){subGroup.classList.remove('hidden');}else{subGroup.classList.add('hidden');subSel.value=0;S.addons[cfg.subId]=0;S.addonLabels[cfg.subId]='';}}
+          renderResult();
+        });
+      }
+      container.appendChild(group);
+    }
+  });
+  if(!hasAddons)container.innerHTML='<div class="fabric-note">ไม่มีออปชั่นเสริมสำหรับทรงนี้</div>';
+}
+
+function hideResult(){$('resultSection').classList.add('hidden');}
+
+function renderResult(){
+  const qty=parseInt($('qtyInput').value)||0;const key=getDbKey();
+  if(!key||!S.size||!S.fabric||qty<1){hideResult();return;}
+  const row=DB[key].find(r=>r.s===S.size);if(!row)return;
+  const arr=(S.fabric!=='8oz')?row.p11:row.p8;if(!arr)return;
+  const idx=getTierIndex(qty);const basePrice=arr[idx];
+  let addonPrice=(S.strapPrintPrice||0)+(S.strapSubPrice||0);
+  for(let aId in S.addons){addonPrice+=S.addons[aId];}
+  const finalUnitPrice=basePrice+addonPrice;const billQty=Math.max(qty,30);const total=finalUnitPrice*billQty;
+  $('rPriceUnit').textContent=finalUnitPrice.toLocaleString()+' บาท/ใบ';
+  $('rPriceDetail').textContent=addonPrice>0?'(กระเป๋า '+basePrice+'฿ + ออปชั่น '+addonPrice+'฿)':'';
+  $('rQty').textContent=qty.toLocaleString()+' ใบ'+(qty<30?' (ขั้นต่ำ 30 ใบ)':'');
+  $('rTotal').textContent=total.toLocaleString()+' บาท';
+  const shapeName=SHAPES.find(sh=>sh.key===S.shape)?.label||S.shape;
+  let sum='ทรง: '+shapeName;if(S.sub)sum+=' · '+SUB_LABELS[S.sub];
+  sum+='\nไซส์: '+S.size+' นิ้ว · '+FABRIC_LABELS[S.fabric];
+  const activeAddons=[];
+  if(S.strapPrintLabel&&!S.strapPrintLabel.includes('ไม่พิมพ์')&&!S.strapPrintLabel.includes('ไม่มี'))activeAddons.push(S.strapPrintLabel.split(' (+')[0].replace(/5\.\d+\s/,''));
+  if(S.strapSubLabel&&!S.strapSubLabel.includes('ไม่พิมพ์')&&!S.strapSubLabel.includes('ไม่มี'))activeAddons.push(S.strapSubLabel.split(' (+')[0]);
+  Object.entries(S.addonLabels).forEach(([aId,l])=>{if(l&&!l.includes('ไม่มี')&&!l.includes('ปกติ')&&l!=='— ไม่เพิ่ม —')activeAddons.push(l.split(' (+')[0].replace(/6\.\d+(\.\d+)?\s/,''));});
+  if(activeAddons.length>0)sum+='\nออปชั่นเสริม: '+activeAddons.join(', ');
+  sum+='\n'+getTierLabel(qty);$('rSummary').textContent=sum;$('resultSection').classList.remove('hidden');
+}
+
+function updateQtyHint(){
+  const qty=parseInt($('qtyInput').value)||0;
+  if(qty<1){$('tierHint').textContent='— กรอกจำนวนอย่างน้อย 1 ใบ';return;}
+  $('tierHint').innerHTML='<span class="tier-badge">'+getTierLabel(qty)+'</span>';renderResult();
+}
+
+$('shapeChips').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-shape]');if(!btn)return;
+  S={shape:btn.dataset.shape,sub:null,size:null,fabric:null,strapPrintPrice:null,strapPrintLabel:null,strapSubPrice:null,strapSubLabel:null,addons:{},addonLabels:{}};
+  clearActive('#shapeChips .chip');btn.classList.add('active');
+  $('subChips').innerHTML='';$('sizeSelect').innerHTML='<option value="">— กรุณาเลือกไซส์ —</option>';
+  clearActive('#fabricChips .chip');$('fabricChoices').classList.remove('hidden');$('canvasOnlyNote').classList.add('hidden');
+  $('strapPrintChips').innerHTML='';$('customizeToggleBox').classList.add('hidden');$('step6').classList.add('hidden');$('moreAddonsCheck').checked=false;$('step3').style.display='';hideResult();
+  if(!NO_STEP2.has(S.shape)){renderStep2();['step3','step4','step5','step7'].forEach(id=>lock(id,true));}
+  else{
+    lock('step2',true);if(S.shape==='yeti'){S.size='4.5×8×3.5';S.fabric='8oz';}
+    renderSizeDropdown();lock('step3',false);['step4','step5','step7'].forEach(id=>lock(id,true));
+    if(S.shape==='box'){S.fabric='11oz';renderFabric();}
+    if(S.size){lock('step4',false);renderFabric();renderStep5();}
+  }
+});
+
+$('sizeSelect').addEventListener('change',e=>{
+  S.size=e.target.value||null;
+  if(S.size){lock('step4',false);if(!S.fabric)S.fabric=(S.shape==='box')?'11oz':'8oz';renderFabric();renderStep5(true);}
+  else{S.fabric=null;clearActive('#fabricChips .chip');['step4','step5','step7'].forEach(id=>lock(id,true));$('step6').classList.add('hidden');hideResult();}
+});
+
+$('fabricChips').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-fabric]');if(!btn||!S.size)return;
+  S.fabric=btn.dataset.fabric;clearActive('#fabricChips .chip');btn.classList.add('active');renderStep5(true);
+});
+
+$('moreAddonsCheck').addEventListener('change',e=>{
+  if(e.target.checked){$('step6').classList.remove('hidden');renderAddons(true);}
+  else{$('step6').classList.add('hidden');S.addons={};S.addonLabels={};}renderResult();
+});
+
+$('qtyInput').addEventListener('input',updateQtyHint);
+$('qtyMinus').addEventListener('click',()=>{$('qtyInput').value=Math.max(1,(parseInt($('qtyInput').value)||1)-1);updateQtyHint();});
+$('qtyPlus').addEventListener('click',()=>{$('qtyInput').value=(parseInt($('qtyInput').value)||0)+1;updateQtyHint();});
+
+$('lineShareBtn').addEventListener('click',()=>{
+  let msg='🛒 สรุปออเดอร์จากเว็บ\n\n'+$('rSummary').textContent+'\n\nราคาต่อใบ: '+$('rPriceUnit').textContent;
+  if($('rPriceDetail').textContent)msg+='\n'+$('rPriceDetail').textContent;
+  msg+='\nยอดรวม: '+$('rTotal').textContent;
+  window.open('https://line.me/R/oaMessage/@ATNOON/?message='+encodeURIComponent(msg),'_blank');
+});
+
+function openLightbox(src,caption){$('lightbox-img').src=src;$('lightbox-caption').textContent=caption;$('lightbox').classList.add('open');document.body.style.overflow='hidden';}
+function closeLightbox(){$('lightbox').classList.remove('open');$('lightbox-img').src='';document.body.style.overflow='';}
+$('lightbox').addEventListener('click',(e)=>{if(e.target===$('lightbox'))closeLightbox();});
+document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeLightbox();});
+
+$('resetBtn').addEventListener('click',()=>{
+  S={shape:null,sub:null,size:null,fabric:null,strapPrintPrice:null,strapPrintLabel:null,strapSubPrice:null,strapSubLabel:null,addons:{},addonLabels:{}};
+  clearActive('.chip, .image-choice-card');$('subChips').innerHTML='';$('sizeSelect').innerHTML='<option value="">— กรุณาเลือกไซส์ —</option>';
+  $('strapPrintChips').innerHTML='';$('addonContainer').innerHTML='';$('qtyInput').value=30;$('tierHint').innerHTML='<span class="tier-badge">เรท 30 ใบ ต่อ 1 แบบ*</span>';
+  hideResult();$('fabricChoices').classList.remove('hidden');$('canvasOnlyNote').classList.add('hidden');$('customizeToggleBox').classList.add('hidden');$('step6').classList.add('hidden');$('moreAddonsCheck').checked=false;
+  ['step2','step3','step4','step5','step7'].forEach(id=>lock(id,true));$('step3').style.display='';window.scrollTo({top:0,behavior:'smooth'});
+});
+</script>
+</body>
+</html>
