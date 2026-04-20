@@ -102,8 +102,8 @@ body {
   height: 140px;
   object-fit: contain;
   background: transparent;
-  padding: 6px; /* ลดระยะขอบลงจาก 12px เพื่อให้ตัวกระเป๋าขยายใหญ่ขึ้น */
-  filter: drop-shadow(0px 3px 4px rgba(0, 0, 0, 0.12)); /* ปรับเงาให้เล็กลง บางลง และกระชับขึ้น */
+  padding: 6px; 
+  filter: drop-shadow(0px 3px 4px rgba(0, 0, 0, 0.12)); 
   transition: transform 0.3s ease;
 }
 .image-choice-text {
@@ -115,7 +115,6 @@ body {
   line-height: 1.3;
 }
 .image-choice-card.active .image-choice-text {
-  /* ให้ตัวหนังสือยังคงเป็นสีน้ำเงินเข้ม แต่ขอบการ์ดสีเหลืองจะทำหน้าที่เน้นแทน */
   color: #1A3263; 
 }
 
@@ -194,7 +193,6 @@ input[type=number]:focus { border-color: #FAB95B; }
   font-weight: 600;
 }
 
-/* เพิ่ม CSS สำหรับกล่องข้อความพิเศษ */
 .special-note {
   margin-top: 12px;
   padding: 8px 12px;
@@ -246,7 +244,6 @@ input[type=number]:focus { border-color: #FAB95B; }
   white-space: pre-line;
 }
 
-/* Action Buttons */
 .action-buttons {
   display: flex;
   gap: 12px;
@@ -303,12 +300,11 @@ input[type=number]:focus { border-color: #FAB95B; }
 .fabric-note { font-size: 0.8rem; color: #547792; margin-top: 8px; }
 .hidden { display: none !important; }
 
-/* Lightbox - Frosted Glass Effect */
 #lightbox {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(232, 226, 219, 0.85); /* สีครีมโปร่งแสง */
+  background: rgba(232, 226, 219, 0.85); 
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   z-index: 9999;
@@ -412,7 +408,6 @@ input[type=number]:focus { border-color: #FAB95B; }
 <body>
 <div class="container">
 
-  <!-- Lightbox Overlay -->
   <div id="lightbox">
     <button id="lightbox-close" onclick="closeLightbox()">✕</button>
     <img id="lightbox-img" src="" alt="">
@@ -424,19 +419,16 @@ input[type=number]:focus { border-color: #FAB95B; }
     <p>Atnoon — ราคาปี 2026</p>
   </div>
 
-  <!-- STEP 1 -->
   <div class="card" id="step1">
     <div class="step-label">1 เลือกทรงกระเป๋า</div>
     <div class="chips" id="shapeChips"></div>
   </div>
 
-  <!-- STEP 2 -->
   <div class="card locked" id="step2">
     <div class="step-label" id="step2Label">2 เลือกลักษณะ</div>
     <div class="chips" id="subChips"></div>
   </div>
 
-  <!-- STEP 3: Dropdown -->
   <div class="card locked" id="step3">
     <div class="step-label" id="step3Label">3 เลือกไซส์ (นิ้ว)</div>
     <select id="sizeSelect">
@@ -444,7 +436,6 @@ input[type=number]:focus { border-color: #FAB95B; }
     </select>
   </div>
 
-  <!-- STEP 4 -->
   <div class="card locked" id="step4">
     <div class="step-label">4 เลือกเนื้อผ้า</div>
     <div id="fabricChoices">
@@ -459,7 +450,6 @@ input[type=number]:focus { border-color: #FAB95B; }
     </div>
   </div>
 
-  <!-- STEP 5 -->
   <div class="card locked" id="step5">
     <div class="step-label" id="step5Label">5 การพิมพ์สายกระเป๋า</div>
     <div class="chips" id="strapPrintChips"></div>
@@ -475,13 +465,11 @@ input[type=number]:focus { border-color: #FAB95B; }
     </div>
   </div>
 
-  <!-- STEP 6 -->
   <div class="card hidden" id="step6">
     <div class="step-label">6 เลือกออปชั่นเสริม (Add-on)</div>
     <div id="addonContainer"></div>
   </div>
 
-  <!-- STEP 7 -->
   <div class="card locked" id="step7">
     <div class="step-label">7 กรอกจำนวน (ใบ)</div>
     <div class="qty-wrap">
@@ -491,14 +479,12 @@ input[type=number]:focus { border-color: #FAB95B; }
     </div>
     <div class="qty-hint" id="tierHint"><span class="tier-badge">เรท 30 ใบ ต่อ 1 แบบ*</span></div>
     
-    <!-- เพิ่มกล่องเน้นข้อความตรงนี้ -->
     <div class="special-note">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
       พิเศษ! พิมพ์หน้า-หลังคนละรูปได้ ราคาเดิม
     </div>
   </div>
 
-  <!-- RESULT -->
   <div id="resultSection" class="hidden">
     <div class="result-card">
       <h3>💰 สรุปราคา</h3>
@@ -528,7 +514,6 @@ input[type=number]:focus { border-color: #FAB95B; }
     </div>
   </div>
 
-  <!-- ── Footer Note ── -->
   <div class="footer-note">
     <div class="big-note">★ ผลิตหลังยืนยันแบบและชำระยอดเต็มเท่านั้น ★</div>
     
@@ -796,35 +781,25 @@ function getTierLabel(qty) {
   return ['เรท 30 ใบ','เรท 100 ใบ','เรท 200 ใบ','เรท 300 ใบ','เรท 500 ใบ','เรท 1,000 ใบ'][getTierIndex(qty)] + ' ต่อ 1 แบบ*';
 }
 
-// แย่งขนาดความกว้าง ความสูง จาก string ไซส์เพื่อใช้เทียบ
 function parseSize(s) {
   if (!s) return null;
   const parts = s.split('×').map(Number);
   return { w: parts[0], h: parts[1], str: s };
 }
 
-// ฟังก์ชันหาไซส์ที่ใกล้เคียงที่สุด อ้างอิงจาก ราคา -> กว้าง/สูง
 function findSimilarSize(oldSize, oldKey, newKey) {
   if (!oldSize || !oldKey || !newKey || !DB[newKey] || !DB[oldKey]) return null;
-  
-  // 1. ถ้ามีไซส์ชื่อตรงกันเป๊ะ เอาอันนั้นเลย
   if (DB[newKey].some(r => r.s === oldSize)) return oldSize; 
 
   const oldDim = parseSize(oldSize);
   const oldRow = DB[oldKey].find(r => r.s === oldSize);
   if (!oldRow) return null;
-  
-  // ใช้ราคาฐานของผ้า 11oz เรท 30 ใบ เป็นตัวอ้างอิง
   const oldPrice = oldRow.p11[0]; 
 
   let bestMatch = null;
-
-  // 2. หาราคาที่เท่ากันก่อน (เพราะมักจะเป็นกระเป๋าปริมาตรใกล้เคียงกัน)
   const samePriceRows = DB[newKey].filter(r => r.p11[0] === oldPrice);
   if (samePriceRows.length > 0) {
     if (samePriceRows.length === 1) return samePriceRows[0].s;
-    
-    // ถ้าราคาเท่ากันหลายอัน ให้เทียบกว้างหรือสูง
     if (S.shape === 'tote_h') {
         const wMatch = samePriceRows.find(r => parseSize(r.s).w === oldDim.w);
         if (wMatch) return wMatch.s;
@@ -832,16 +807,13 @@ function findSimilarSize(oldSize, oldKey, newKey) {
         const hMatch = samePriceRows.find(r => parseSize(r.s).h === oldDim.h);
         if (hMatch) return hMatch.s;
     }
-    return samePriceRows[0].s; // ไม่ตรงเลยก็เอาอันแรกที่ราคาเท่ากัน
+    return samePriceRows[0].s;
   }
-
-  // 3. ถ้าราคาไม่เท่ากัน ลองเทียบกว้างหรือสูงเพียวๆ
   if (S.shape === 'tote_h') {
     bestMatch = DB[newKey].find(r => parseSize(r.s).w === oldDim.w);
   } else if (S.shape === 'tote_v') {
     bestMatch = DB[newKey].find(r => parseSize(r.s).h === oldDim.h);
   }
-
   return bestMatch ? bestMatch.s : null;
 }
 
@@ -870,19 +842,12 @@ function renderStep2() {
       const oldKey = getDbKey();
       S.sub = o.v; 
       const newKey = getDbKey();
-      
       clearActive('#subChips .chip');
       btn.classList.add('active');
-      
-      // ปลดล็อกข้อ 3 เสมอเมื่อเปลี่ยนก้นกระเป๋า (แก้บั๊กกดไม่ได้)
       lock('step3', false);
-
-      // พยายามหาไซส์ที่ใกล้เคียงที่สุดจากฐานข้อมูล
       S.size = findSimilarSize(oldSize, oldKey, newKey);
-      renderSizeDropdown(); // สร้างตัวเลือกไซส์ใหม่
-      
+      renderSizeDropdown();
       if (!S.size) {
-        // หากหาไซส์ที่เข้าคู่ไม่ได้เลย ให้รีเซ็ตข้อด้านล่าง
         $('sizeSelect').value = "";
         S.fabric = null;
         clearActive('#fabricChips .chip');
@@ -890,12 +855,11 @@ function renderStep2() {
         $('step6').classList.add('hidden');
         hideResult();
       } else {
-        // หากเจอไซส์ที่เหมาะสม ให้เลือกไซส์นั้นและคงค่าเนื้อผ้า/Addon เดิมไว้
         $('sizeSelect').value = S.size;
         lock('step4', false);
         if (!S.fabric) S.fabric = (S.shape === 'box') ? '11oz' : '8oz';
         renderFabric();
-        renderStep5(true); // คำสั่ง preserve = true เพื่อจดจำ Add-on
+        renderStep5(true);
       }
     };
     chips.appendChild(btn);
@@ -940,7 +904,6 @@ function renderFabric() {
 }
 
 function renderStep5(preserve = false) {
-  // หากเปลี่ยนลักษณะหลักโดยไม่ให้จำค่า (preserve = false) ให้เคลียร์ค่า Addon ทิ้ง
   if (!preserve) {
     S.strapPrintPrice = null;
     S.strapPrintLabel = null;
@@ -961,7 +924,7 @@ function renderStep5(preserve = false) {
     
     if (S.shape === 'yeti') {
       opts = [
-        { l: '5.1 สายขาวปกติ', v: 0,
+        { l: '5.1 สายกระเป๋าสีขาว (ไม่พิมพ์สี)', v: 0,
           img: 'https://drive.google.com/thumbnail?id=1DIexNJip_XDzAZs6DaZEkjJnNh0urmZW&sz=w300',
           full: 'https://drive.google.com/thumbnail?id=1DIexNJip_XDzAZs6DaZEkjJnNh0urmZW&sz=w1200' },
         { l: '5.2 พิมพ์สี (+10฿)', v: 10,
@@ -970,7 +933,7 @@ function renderStep5(preserve = false) {
       ];
     } else {
       opts = [
-        { l: '5.1 สายขาวปกติ ไม่พิมพ์', v: 0 },
+        { l: '5.1 สายกระเป๋าสีขาว (ไม่พิมพ์สี)', v: 0 },
         { l: '5.2 พิมพ์สี (+10฿)', v: 10 },
         { l: '5.3 พิมพ์ 2 สี เส้นละสี (+15฿)', v: 15 }
       ];
@@ -983,7 +946,7 @@ function renderStep5(preserve = false) {
         hasSub: true,
         subTitle: '↳ การพิมพ์สีสายคล้อง',
         subOpts: [
-          { l: 'สายขาวปกติ ไม่พิมพ์', v: 0 },
+          { l: 'สายกระเป๋าสีขาว (ไม่พิมพ์สี)', v: 0 },
           { l: 'พิมพ์สี (+5฿)', v: 5 }
         ]
       }
@@ -992,7 +955,6 @@ function renderStep5(preserve = false) {
 
   if (opts.length > 0) {
     $('step5Label').style.display = 'block';
-    
     const mainContainer = document.createElement('div');
     mainContainer.className = 'chips';
     chips.appendChild(mainContainer);
@@ -1006,8 +968,6 @@ function renderStep5(preserve = false) {
 
     opts.forEach((o, idx) => {
       const el = document.createElement('div');
-      
-      // ลอจิกการจดจำปุ่มที่เคยเลือก
       let isActive = false;
       if (preserve && S.strapPrintPrice === o.v && S.strapPrintLabel === o.l) {
           isActive = true;
@@ -1016,7 +976,6 @@ function renderStep5(preserve = false) {
       } else if (preserve && S.strapPrintPrice === null && idx === 0) {
           isActive = true;
       }
-
       if (isActive) {
           S.strapPrintPrice = o.v;
           S.strapPrintLabel = o.l;
@@ -1046,7 +1005,6 @@ function renderStep5(preserve = false) {
         S.strapPrintLabel = o.l;
         clearActive('#strapPrintChips .chip:not(.sub-chip), #strapPrintChips .image-choice-card');
         el.classList.add('active');
-        
         if (o.hasSub) {
           subContainerWrapper.innerHTML = '';
           const subLabel = document.createElement('div');
@@ -1054,11 +1012,9 @@ function renderStep5(preserve = false) {
           subLabel.style.fontSize = '0.82rem';
           subLabel.textContent = o.subTitle;
           subContainerWrapper.appendChild(subLabel);
-
           const subChips = document.createElement('div');
           subChips.className = 'chips';
           subContainerWrapper.appendChild(subChips);
-
           o.subOpts.forEach((subO, subIdx) => {
             const subBtn = document.createElement('button');
             subBtn.className = 'chip sub-chip' + (subIdx === 0 ? ' active' : '');
@@ -1072,7 +1028,6 @@ function renderStep5(preserve = false) {
             };
             subChips.appendChild(subBtn);
           });
-
           S.strapSubPrice = o.subOpts[0].v;
           S.strapSubLabel = o.subOpts[0].l;
           subContainerWrapper.classList.remove('hidden');
@@ -1081,22 +1036,18 @@ function renderStep5(preserve = false) {
           S.strapSubPrice = 0;
           S.strapSubLabel = '';
         }
-
         renderResult();
       };
       mainContainer.appendChild(el);
-
       if (o.hasSub && isActive) {
           const subLabel = document.createElement('div');
           subLabel.className = 'addon-label';
           subLabel.style.fontSize = '0.82rem';
           subLabel.textContent = o.subTitle;
           subContainerWrapper.appendChild(subLabel);
-
           const subChips = document.createElement('div');
           subChips.className = 'chips';
           subContainerWrapper.appendChild(subChips);
-
           o.subOpts.forEach((subO, subIdx) => {
             let isSubActive = false;
             if (preserve && S.strapSubPrice === subO.v && S.strapSubLabel === subO.l) {
@@ -1106,12 +1057,10 @@ function renderStep5(preserve = false) {
             } else if (preserve && S.strapSubPrice === null && subIdx === 0) {
                 isSubActive = true;
             }
-
             if (isSubActive) {
                 S.strapSubPrice = subO.v;
                 S.strapSubLabel = subO.l;
             }
-
             const subBtn = document.createElement('button');
             subBtn.className = 'chip sub-chip' + (isSubActive ? ' active' : '');
             subBtn.textContent = subO.l;
@@ -1127,7 +1076,6 @@ function renderStep5(preserve = false) {
           subContainerWrapper.classList.remove('hidden');
       }
     });
-    
     toggleBox.classList.remove('hidden');
   } else {
     $('step5Label').textContent = '5 ออปชั่นเสริม';
@@ -1143,7 +1091,6 @@ function renderStep5(preserve = false) {
   } else {
       $('step6').classList.add('hidden');
   }
-
   lock('step5', false);
   lock('step7', false);
   renderResult();
@@ -1179,7 +1126,6 @@ function renderAddons(preserve = false) {
         const mainSel = document.createElement('select');
         mainSel.innerHTML = `<option value="no">— ไม่เพิ่ม —</option><option value="yes">เพิ่มกระเป๋าเล็กด้านใน</option>`;
         group.appendChild(mainSel);
-
         const subGroup = document.createElement('div');
         subGroup.className = 'addon-sub-group hidden';
         subGroup.style.marginTop = '10px';
@@ -1188,14 +1134,12 @@ function renderAddons(preserve = false) {
         subGroup.style.display = 'flex';
         subGroup.style.flexDirection = 'column';
         subGroup.style.gap = '10px';
-
         const fabWrap = document.createElement('div');
         const fabLabel = document.createElement('div');
         fabLabel.className = 'addon-label';
         fabLabel.style.fontSize = '0.82rem';
-        fabLabel.textContent = '↳ ชนิดผ้า'; // ลบคำว่าแนะนำออกแล้ว
+        fabLabel.textContent = '↳ ชนิดผ้า';
         const fabSel = document.createElement('select');
-
         const populateFabrics = (isPreserving = false) => {
           fabSel.innerHTML = '';
           const options = [
@@ -1205,7 +1149,6 @@ function renderAddons(preserve = false) {
           if (S.fabric === '11oz' || S.shape === 'box') {
             options.push({ val: 40, l: 'แคนวาส / แคนวาสฟอก (+40฿)', id: '11oz' });
           }
-
           options.forEach(o => {
             const opt = document.createElement('option');
             opt.value = o.val;
@@ -1213,20 +1156,16 @@ function renderAddons(preserve = false) {
             opt.dataset.label = 'กป.เล็ก ' + o.l.split(' (+')[0];
             fabSel.appendChild(opt);
           });
-
           if (isPreserving && S.addons['inner_pocket_fab'] !== undefined) {
              fabSel.value = S.addons['inner_pocket_fab'];
-             // ถ้าผ้าที่จำไว้ถูกตัดออกไป ให้เลือกผ้าที่ใกล้เคียงที่สุด
              if (!fabSel.value) fabSel.value = (S.fabric === '8oz') ? 30 : 40;
           } else {
              fabSel.value = (S.fabric === '8oz') ? 30 : 40;
           }
         };
-
         fabWrap.appendChild(fabLabel);
         fabWrap.appendChild(fabSel);
         subGroup.appendChild(fabWrap);
-
         const printWrap = document.createElement('div');
         const printLabel = document.createElement('div');
         printLabel.className = 'addon-label';
@@ -1237,16 +1176,13 @@ function renderAddons(preserve = false) {
         printWrap.appendChild(printLabel);
         printWrap.appendChild(printSel);
         subGroup.appendChild(printWrap);
-
         group.appendChild(subGroup);
-
         const updateInnerState = () => {
           if (mainSel.value === 'yes') {
             subGroup.classList.remove('hidden');
             S.addons['inner_pocket_fab'] = parseInt(fabSel.value) || 0;
             const fabOpt = fabSel.options[fabSel.selectedIndex];
             S.addonLabels['inner_pocket_fab'] = fabOpt ? fabOpt.dataset.label : '';
-
             S.addons['inner_pocket_print'] = parseInt(printSel.value) || 0;
             const printOpt = printSel.options[printSel.selectedIndex];
             S.addonLabels['inner_pocket_print'] = (printOpt && printSel.value !== "0") ? printOpt.dataset.label : '';
@@ -1259,8 +1195,6 @@ function renderAddons(preserve = false) {
           }
           renderResult();
         };
-
-        // หากเป็นการจดจำค่า ให้เปิด Dropdown อัตโนมัติ
         if (preserve && (S.addons['inner_pocket_fab'] > 0 || S.addons['inner_pocket_print'] > 0 || S.addonLabels['inner_pocket_fab'])) {
             mainSel.value = 'yes';
             populateFabrics(true);
@@ -1276,24 +1210,20 @@ function renderAddons(preserve = false) {
                 S.addonLabels['inner_pocket_print'] = '';
             }
         }
-
         mainSel.addEventListener('change', () => {
           if(mainSel.value === 'yes') populateFabrics(false); 
           updateInnerState();
         });
         fabSel.addEventListener('change', updateInnerState);
         printSel.addEventListener('change', updateInnerState);
-
       } else {
         const sel = document.createElement('select');
         sel.dataset.id = cfg.id;
-        
         const defaultOpt = document.createElement('option');
         defaultOpt.value = 0;
         defaultOpt.textContent = '— ไม่เพิ่ม —';
         defaultOpt.dataset.label = '';
         sel.appendChild(defaultOpt);
-
         cfg.options.forEach((opt) => {
           const o = document.createElement('option');
           o.value = opt.price;
@@ -1301,7 +1231,6 @@ function renderAddons(preserve = false) {
           o.dataset.label = opt.label; 
           sel.appendChild(o);
         });
-
         if (preserve && S.addons[cfg.id] !== undefined) {
             sel.value = S.addons[cfg.id];
             const selectedOpt = sel.options[sel.selectedIndex];
@@ -1311,9 +1240,7 @@ function renderAddons(preserve = false) {
             S.addonLabels[cfg.id] = '';
             sel.value = 0;
         }
-
         group.appendChild(sel);
-
         let subGroup = null;
         let subSel = null;
         if (cfg.hasSub) {
@@ -1322,22 +1249,18 @@ function renderAddons(preserve = false) {
           subGroup.style.marginTop = '10px';
           subGroup.style.paddingLeft = '16px';
           subGroup.style.borderLeft = '2.5px solid #FAB95B';
-          
           const subLabel = document.createElement('div');
           subLabel.className = 'addon-label';
           subLabel.style.fontSize = '0.82rem';
           subLabel.textContent = cfg.subTitle;
           subGroup.appendChild(subLabel);
-          
           subSel = document.createElement('select');
           subSel.dataset.id = cfg.subId;
-          
           const subDefaultOpt = document.createElement('option');
           subDefaultOpt.value = 0;
           subDefaultOpt.textContent = '— ไม่เพิ่ม —';
           subDefaultOpt.dataset.label = '';
           subSel.appendChild(subDefaultOpt);
-          
           cfg.subOptions.forEach((opt) => {
             const o = document.createElement('option');
             o.value = opt.price;
@@ -1345,7 +1268,6 @@ function renderAddons(preserve = false) {
             o.dataset.label = opt.label;
             subSel.appendChild(o);
           });
-          
           if (preserve && S.addons[cfg.subId] !== undefined) {
              subSel.value = S.addons[cfg.subId];
              const selectedOpt = subSel.options[subSel.selectedIndex];
@@ -1356,24 +1278,20 @@ function renderAddons(preserve = false) {
              S.addonLabels[cfg.subId] = '';
              subSel.value = 0;
           }
-          
           subSel.addEventListener('change', (e) => {
             S.addons[cfg.subId] = parseInt(e.target.value) || 0;
             const selectedOpt = e.target.options[e.target.selectedIndex];
             S.addonLabels[cfg.subId] = selectedOpt.dataset.label;
             renderResult();
           });
-
           subGroup.appendChild(subSel);
           group.appendChild(subGroup);
         }
-
         sel.addEventListener('change', (e) => {
           const val = parseInt(e.target.value) || 0;
           S.addons[cfg.id] = val;
           const selectedOpt = e.target.options[e.target.selectedIndex];
           S.addonLabels[cfg.id] = selectedOpt.dataset.label;
-          
           if (cfg.hasSub && subGroup && subSel) {
             if (val > 0) {
               subGroup.classList.remove('hidden');
@@ -1384,7 +1302,6 @@ function renderAddons(preserve = false) {
               S.addonLabels[cfg.subId] = '';
             }
           }
-          
           renderResult();
         });
       }
@@ -1439,28 +1356,47 @@ function renderResult() {
   const shapeName = SHAPES.find(sh => sh.key === S.shape)?.label || S.shape;
   let sum = `ทรง: ${shapeName}`;
   if (S.sub) sum += ` · ${SUB_LABELS[S.sub]}`;
-  sum += `\nไซส์: ${S.size} นิ้ว · ${FABRIC_LABELS[S.fabric]}`;
   
+  let baseInfo = `ไซส์: ${S.size} นิ้ว · ${FABRIC_LABELS[S.fabric]}`;
   const activeAddons = [];
-  if (S.strapPrintLabel && !S.strapPrintLabel.includes('ไม่พิมพ์') && !S.strapPrintLabel.includes('ไม่มี')) {
-    activeAddons.push(S.strapPrintLabel.split(' (+')[0].replace(/5\.\d+\s/, ''));
+  
+  if (S.strapPrintLabel) {
+    let cleanLabel = S.strapPrintLabel.split(' (+')[0].replace(/5\.\d+\s/, '');
+    
+    // จัดการข้อความพิมพ์สายกระเป๋า
+    if (cleanLabel.includes('พิมพ์สี') || cleanLabel.includes('พิมพ์ 2 สี')) {
+      if (!cleanLabel.startsWith('สายกระเป๋า')) {
+          cleanLabel = 'สายกระเป๋า' + cleanLabel;
+      }
+    }
+
+    // ถ้าเป็นสายสีขาวปกติ (ไม่บวกราคา) ให้แสดงต่อท้ายข้อมูลหลัก
+    if (cleanLabel.includes('สายกระเป๋าสีขาว (ไม่พิมพ์สี)')) {
+      baseInfo += ` · ${cleanLabel}`;
+    } else if (!cleanLabel.includes('ไม่พิมพ์') && !cleanLabel.includes('ไม่มี')) {
+      activeAddons.push(cleanLabel);
+    }
   }
+
   if (S.strapSubLabel && !S.strapSubLabel.includes('ไม่พิมพ์') && !S.strapSubLabel.includes('ไม่มี')) {
-    activeAddons.push(S.strapSubLabel.split(' (+')[0]);
+    let subL = S.strapSubLabel.split(' (+')[0];
+    if (subL.includes('พิมพ์สี')) subL = 'สายคล้องพิมพ์สี';
+    activeAddons.push(subL);
   }
+  
   Object.entries(S.addonLabels).forEach(([aId, l]) => {
     if (l && !l.includes('ไม่มี') && !l.includes('ปกติ') && l !== '— ไม่เพิ่ม —') {
       activeAddons.push(l.split(' (+')[0].replace(/6\.\d+(\.\d+)?\s/, ''));
     }
   });
 
+  sum += `\n${baseInfo}`;
   if (activeAddons.length > 0) {
     sum += `\nออปชั่นเสริม: ` + activeAddons.join(', '); 
   }
-
   sum += `\n${getTierLabel(qty)}`;
+  
   $('rSummary').textContent = sum;
-
   $('resultSection').classList.remove('hidden');
 }
 
@@ -1481,7 +1417,7 @@ $('shapeChips').addEventListener('click', e => {
   $('sizeSelect').innerHTML = '<option value="">— กรุณาเลือกไซส์ —</option>';
   clearActive('#fabricChips .chip');
   $('fabricChoices').classList.remove('hidden');
-  $('canvasOnlyNote').classList.add('hidden'); // แก้ปัญหาข้อความทรงกล่องค้าง
+  $('canvasOnlyNote').classList.add('hidden'); 
   $('strapPrintChips').innerHTML = '';
   $('customizeToggleBox').classList.add('hidden');
   $('step6').classList.add('hidden');
@@ -1496,17 +1432,15 @@ $('shapeChips').addEventListener('click', e => {
     lock('step2', true);
     if (S.shape === 'yeti') {
         S.size = '4.5×8×3.5';
-        S.fabric = '8oz'; // เลือกผ้าอัตโนมัติสำหรับเยติ
+        S.fabric = '8oz'; 
     }
     renderSizeDropdown();
     lock('step3', false);
     ['step4','step5','step7'].forEach(id => lock(id, true));
-    
     if (S.shape === 'box') { 
         S.fabric = '11oz'; 
         renderFabric(); 
     }
-    
     if (S.size) { 
         lock('step4', false);
         renderFabric();
@@ -1519,7 +1453,6 @@ $('sizeSelect').addEventListener('change', e => {
   S.size = e.target.value || null;
   if (S.size) {
     lock('step4', false);
-    // เลือกลักษณะผ้าอัตโนมัติเมื่อมีการเลือกไซส์
     if (!S.fabric) S.fabric = (S.shape === 'box') ? '11oz' : '8oz';
     renderFabric();
     renderStep5(true);
@@ -1538,7 +1471,7 @@ $('fabricChips').addEventListener('click', e => {
   S.fabric = btn.dataset.fabric;
   clearActive('#fabricChips .chip');
   btn.classList.add('active');
-  renderStep5(true); // จดจำค่า Addon ไว้ ไม่ให้รีเซ็ต
+  renderStep5(true);
 });
 
 $('moreAddonsCheck').addEventListener('change', e => {
@@ -1563,7 +1496,6 @@ $('qtyPlus').addEventListener('click', () => {
   updateQtyHint();
 });
 
-// กดส่งสรุปไปที่ LINE
 $('lineShareBtn').addEventListener('click', () => {
   let msg = `🛒 สรุปออเดอร์จากเว็บ\n\n`;
   msg += $('rSummary').textContent;
@@ -1572,7 +1504,6 @@ $('lineShareBtn').addEventListener('click', () => {
       msg += `\n${$('rPriceDetail').textContent}`;
   }
   msg += `\nยอดรวม: ${$('rTotal').textContent}`;
-  
   const url = `https://line.me/R/oaMessage/@ATNOON/?message=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 });
@@ -1588,11 +1519,9 @@ function closeLightbox() {
   $('lightbox-img').src = '';
   document.body.style.overflow = '';
 }
-// คลิกพื้นหลัง lightbox เพื่อปิด
 $('lightbox').addEventListener('click', (e) => {
   if (e.target === $('lightbox')) closeLightbox();
 });
-// กด Escape เพื่อปิด
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeLightbox();
 });
