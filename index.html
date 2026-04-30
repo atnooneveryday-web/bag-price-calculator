@@ -222,7 +222,29 @@ input[type=number]:focus { border-color: #FAB95B; }
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(26, 50, 99, 0.15); 
+  border-bottom: 1px solid rgba(26, 50, 99, 0.15);
+}
+.result-row-shipping {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(26, 50, 99, 0.15);
+  opacity: 0.85;
+}
+.result-row-grand {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0 2px;
+  margin-top: 4px;
+  border-top: 2px solid rgba(26, 50, 99, 0.25);
+}
+.result-note-shipping {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  margin-top: 6px;
+  text-align: right;
 }
 .result-row:last-child { border-bottom: none; }
 .result-label { font-size: 0.92rem; opacity: 0.9; }
@@ -504,9 +526,18 @@ input[type=number]:focus { border-color: #FAB95B; }
         <span class="result-value" id="rQty">—</span>
       </div>
       <div class="result-row">
-        <span class="result-label" style="font-weight:700">ยอดรวม</span>
+        <span class="result-label" style="font-weight:700">ยอดรวมค่ากระเป๋า</span>
         <span class="result-value result-total" id="rTotal">—</span>
       </div>
+      <div class="result-row-shipping">
+        <span class="result-label">📦 ค่าส่ง (ประมาณ)</span>
+        <span class="result-value" id="rShipping">—</span>
+      </div>
+      <div class="result-row-grand">
+        <span class="result-label" style="font-weight:800;font-size:1rem;">🧾 รวมค่ากระเป๋า+ค่าส่ง</span>
+        <span class="result-value result-total" id="rGrandTotal">—</span>
+      </div>
+      <div class="result-note-shipping">* ค่าส่งเป็นค่าประมาณ อาจแตกต่างตามพื้นที่</div>
       <div class="result-summary" id="rSummary"></div>
     </div>
     <div class="action-buttons">
@@ -1317,6 +1348,22 @@ function renderAddons(preserve = false) {
   }
 }
 
+// คำนวณค่าส่งประมาณ
+// ถุงหูรูด + เยติ = ขนาดเล็ก → ค่าส่งถูกกว่า
+// ทรงอื่น = 200฿ ต่อ 1 กล่อง (100 ใบ) / ขั้นต่ำ 150฿
+function getShippingCost(shape, qty) {
+  const SMALL = ['drawstring', 'yeti'];
+  if (SMALL.includes(shape)) {
+    // ≤100 ใบ: 150฿, แล้ว +50฿ ทุก 100 ใบที่เกิน
+    if (qty <= 100) return 150;
+    return 150 + Math.ceil((qty - 100) / 100) * 50;
+  } else {
+    // ≤30 ใบ: 150฿, แล้วคิด 200฿ ต่อ 100 ใบ (หรือส่วนของ 100)
+    if (qty <= 30) return 150;
+    return Math.ceil(qty / 100) * 200;
+  }
+}
+
 function hideResult() {
   $('resultSection').classList.add('hidden');
 }
@@ -1345,8 +1392,11 @@ function renderResult() {
   const billQty = Math.max(qty, 30);
   const total = finalUnitPrice * billQty;
 
+  const shipping = getShippingCost(S.shape, billQty);
+  const grandTotal = total + shipping;
+
   $('rPriceUnit').textContent = finalUnitPrice.toLocaleString() + ' บาท/ใบ';
-  
+
   if (addonPrice > 0) {
     $('rPriceDetail').textContent = `(กระเป๋า ${basePrice}฿ + ออปชั่น ${addonPrice}฿)`;
   } else {
@@ -1355,6 +1405,8 @@ function renderResult() {
 
   $('rQty').textContent = qty.toLocaleString() + ' ใบ' + (qty < 30 ? ' (ขั้นต่ำ 30 ใบ)' : '');
   $('rTotal').textContent = total.toLocaleString() + ' บาท';
+  $('rShipping').textContent = '~' + shipping.toLocaleString() + ' บาท';
+  $('rGrandTotal').textContent = '~' + grandTotal.toLocaleString() + ' บาท';
 
   const shapeName = SHAPES.find(sh => sh.key === S.shape)?.label || S.shape;
   let sum = `ทรง: ${shapeName}`;
@@ -1504,7 +1556,9 @@ $('lineShareBtn').addEventListener('click', () => {
   if ($('rPriceDetail').textContent) {
       msg += `\n${$('rPriceDetail').textContent}`;
   }
-  msg += `\nยอดรวม: ${$('rTotal').textContent}`;
+  msg += `\nยอดรวมค่ากระเป๋า: ${$('rTotal').textContent}`;
+  msg += `\n📦 ค่าส่ง (ประมาณ): ${$('rShipping').textContent}`;
+  msg += `\n🧾 รวมค่ากระเป๋า+ค่าส่ง: ${$('rGrandTotal').textContent}`;
   const url = `https://line.me/R/oaMessage/@ATNOON/?message=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 });
