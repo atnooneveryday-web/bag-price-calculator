@@ -1349,14 +1349,18 @@ function renderAddons(preserve = false) {
 }
 
 // คำนวณค่าส่งประมาณ
-// ถุงหูรูด + เยติ = ขนาดเล็ก → ค่าส่งถูกกว่า
+// ถุงหูรูด + เยติ = ขนาดเล็ก → ขั้นบันได 150–1,000฿
 // ทรงอื่น = 200฿ ต่อ 1 กล่อง (100 ใบ) / ขั้นต่ำ 150฿
 function getShippingCost(shape, qty) {
   const SMALL = ['drawstring', 'yeti'];
   if (SMALL.includes(shape)) {
-    // ≤100 ใบ: 150฿, แล้ว +50฿ ทุก 100 ใบที่เกิน
+    // ขั้นบันได: ≤100=150 / ≤200=250 / ≤300=400 / ≤500=600 / ≤700=800 / 700+=1000
     if (qty <= 100) return 150;
-    return 150 + Math.ceil((qty - 100) / 100) * 50;
+    if (qty <= 200) return 250;
+    if (qty <= 300) return 400;
+    if (qty <= 500) return 600;
+    if (qty <= 700) return 800;
+    return 1000;
   } else {
     // ≤30 ใบ: 150฿, แล้วคิด 200฿ ต่อ 100 ใบ (หรือส่วนของ 100)
     if (qty <= 30) return 150;
