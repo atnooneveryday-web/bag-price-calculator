@@ -487,7 +487,7 @@ input[type=number]:focus { border-color: #FAB95B; }
       <div class="fabric-note" id="fabricNote">หมายเหตุ: ผ้าดิบแคนวาส 11 oz. และ ผ้าแคนวาสฟอก 10 oz. ราคาเดียวกัน</div>
     </div>
     <div id="canvasOnlyNote" class="hidden">
-      <span class="canvas-only-note" id="canvasOnlyText">ทรงกล่องใช้ได้เฉพาะ ผ้าดิบแคนวาส / ผ้าแคนวาสฟอก เท่านั้น ✓</span>
+      <span class="canvas-only-note" id="canvasOnlyText">ทรงกล่องใช้ได้เฉพาะ ผ้าดิบแคนวาส 11 oz. / ผ้าแคนวาสฟอก 10 oz. เท่านั้น ✓</span>
     </div>
   </div>
 
@@ -616,10 +616,10 @@ const T = {
     fabric8oz: '4.1 ผ้าดิบลายสอง 8 oz.',
     fabric11oz: '4.2 ผ้าดิบแคนวาส 11 oz. / ผ้าแคนวาสฟอก 10 oz.',
     fabricNote: 'หมายเหตุ: ผ้าดิบแคนวาส 11 oz. และ ผ้าแคนวาสฟอก 10 oz. ราคาเดียวกัน',
-    canvasOnly: 'ทรงกล่องใช้ได้เฉพาะ ผ้าดิบแคนวาส / ผ้าแคนวาสฟอก เท่านั้น ✓',
-    strapWhite: '5.1 สายกระเป๋าสีขาว (ไม่พิมพ์สี)', strapColor: '5.2 พิมพ์สี (+10฿)', strapColor2: '5.3 พิมพ์ 2 สี เส้นละสี (+15฿)',
+    canvasOnly: 'ทรงกล่องใช้ได้เฉพาะ ผ้าดิบแคนวาส 11 oz. / ผ้าแคนวาสฟอก 10 oz. เท่านั้น ✓',
+    strapWhite: '5.1 สายกระเป๋าสีขาว/ไม่พิมพ์สี', strapColor: '5.2 พิมพ์สี (+10฿)', strapColor2: '5.3 พิมพ์ 2 สี เส้นละสี (+15฿)',
     strapNoWrist: '5.1 ไม่มีสายคล้องข้อมือ', strapWrist: '5.2 มีสายคล้องข้อมือ (+5฿)',
-    strapWristSub: '↳ การพิมพ์สีสายคล้อง', strapWristWhite: 'สายกระเป๋าสีขาว (ไม่พิมพ์สี)', strapWristColor: 'พิมพ์สี (+5฿)',
+    strapWristSub: '↳ การพิมพ์สีสายคล้อง', strapWristWhite: 'สายกระเป๋าสีขาว/ไม่พิมพ์สี', strapWristColor: 'พิมพ์สี (+5฿)',
     addonNone: '— ไม่เพิ่ม —', addonNoAddons: 'ไม่มีออปชั่นเสริมสำหรับทรงนี้',
     innerAdd: 'เพิ่มกระเป๋าเล็กด้านใน', innerNo: '— ไม่เพิ่ม —',
     innerFabric: '↳ ชนิดผ้า', innerSolon: 'ผ้าโซล่อน (+20฿)', inner8oz: 'ผ้าดิบลายสอง (+30฿)', inner11oz: 'แคนวาส / แคนวาสฟอก (+40฿)',
@@ -648,7 +648,7 @@ const T = {
     lineGrandTotalLabel: '🧾 รวมค่ากระเป๋า+ค่าส่ง',
     zoomHint: '🔍 แตะรูปเพื่อดูขยาย',
     subLabels: { exp:'ขยายก้น', noexp:'ไม่ขยายก้น', round:'สายกลมขาว', fish:'สายก้างปลาแบนครีม' },
-    fabricLabels: { '8oz':'ผ้าดิบลายสอง 8 oz.', '11oz':'ผ้าดิบแคนวาส/แคนวาสฟอก' },
+    fabricLabels: { '8oz':'ผ้าดิบลายสอง 8 oz.', '11oz':'ผ้าดิบแคนวาส 11 oz. / ผ้าแคนวาสฟอก 10 oz.' },
     printIncl: 'ราคารวมค่าพิมพ์ลายไม่จำกัดสี / ขนาด หน้า-หลังแล้ว',
     boxVertical: 'แนวตั้ง (สูง > กว้าง)', boxHorizontal: 'แนวนอน (กว้าง > สูง)',
   },
@@ -709,7 +709,7 @@ const T = {
     lineGrandTotalLabel: '🧾 Bag + Shipping Total',
     zoomHint: '🔍 Tap image to enlarge',
     subLabels: { exp:'Expandable Bottom', noexp:'Flat Bottom', round:'White Round Cord', fish:'Cream Flat Fishbone Cord' },
-    fabricLabels: { '8oz':'Unbleached Canvas 8 oz.', '11oz':'Raw Canvas/Bleached Canvas' },
+    fabricLabels: { '8oz':'Unbleached Canvas 8 oz.', '11oz':'Raw Canvas 11 oz. / Bleached Canvas 10 oz.' },
     printIncl: 'Price includes unlimited colors / size, front & back printing',
     boxVertical: 'Vertical (tall > wide)', boxHorizontal: 'Horizontal (wide > tall)',
   }
@@ -1064,7 +1064,7 @@ function renderSizeDropdown() {
   if ($('step3Label')) $('step3Label').textContent = (LANG === 'en' ? '3 Size (in.) ' : '3 เลือกไซส์ (นิ้ว) ') + hint;
   if (!key) return;
   if (key === 'box') {
-    const vertical = DB[key].filter(r => { const p = r.s.split('×'); return Number(p[0]) < Number(p[1]); });
+    const vertical   = DB[key].filter(r => { const p = r.s.split('×'); return Number(p[0]) < Number(p[1]); });
     const horizontal = DB[key].filter(r => { const p = r.s.split('×'); return Number(p[0]) > Number(p[1]); });
     const addGroup = (label, rows) => {
       const grp = document.createElement('optgroup');
@@ -1622,7 +1622,7 @@ function renderResult() {
   }
   sum += `\n${getTierLabel(qty)}`;
   sum += `\n${t('printIncl')}`;
-  
+
   $('rSummary').textContent = sum;
   $('resultSection').classList.remove('hidden');
 }
