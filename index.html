@@ -732,6 +732,8 @@ const ADDONS_TH = [
     hasSub:true, subId:'crossbody_print', subTitle:'↳ การพิมพ์สาย Crossbody', subOptions:[{label:'พิมพ์สี (+10฿)',price:10}] },
   { id:'side_pocket', title:'6.6 ช่องด้านข้างทรงกล่อง', condition:['box'],
     options:[{label:'6.6.1 1 ด้าน ช่องใหญ่ (+20฿)',price:20},{label:'6.6.2 1 ด้าน 2 ช่องเล็ก (+20฿)',price:20},{label:'6.6.3 2 ด้าน ช่องใหญ่ (+40฿)',price:40},{label:'6.6.4 2 ด้าน 2 ช่องเล็ก (+40฿)',price:40}] },
+  { id:'bartack', title:'6.7 เย็บกากบาท สายกระเป๋า', condition:['tote_v','tote_h','beach','box','yeti'],
+    options:[{label:'6.7.1 เย็บกากบาท (+10฿)',price:10}] },
 ];
 const ADDONS_EN = [
   { id:'strap_len', title:'6.1 Strap Length', note:'Standard ~21.5 in., varies by size', condition:['tote_v','tote_h','beach','box'],
@@ -748,6 +750,8 @@ const ADDONS_EN = [
     hasSub:true, subId:'crossbody_print', subTitle:'↳ Crossbody Strap Printing', subOptions:[{label:'Color Print (+10฿)',price:10}] },
   { id:'side_pocket', title:'6.6 Box Side Pocket', condition:['box'],
     options:[{label:'6.6.1 1 side, large (+20฿)',price:20},{label:'6.6.2 1 side, 2 small (+20฿)',price:20},{label:'6.6.3 2 sides, large (+40฿)',price:40},{label:'6.6.4 2 sides, 2 small (+40฿)',price:40}] },
+  { id:'bartack', title:'6.7 Bartack Stitch (Strap)', condition:['tote_v','tote_h','beach','box','yeti'],
+    options:[{label:'6.7.1 Bartack Stitch (+10฿)',price:10}] },
 ];
 function getAddonsConfig() { return LANG === 'en' ? ADDONS_EN : ADDONS_TH; }
 
