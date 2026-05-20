@@ -1532,8 +1532,9 @@ function getShippingCost(shape, qty) {
     if (qty <= 700) return 800;
     return 1000;
   } else {
-    // ≤30 ใบ: 150฿, แล้วคิด 200฿ ต่อ 100 ใบ (หรือส่วนของ 100)
-    if (qty <= 30) return 150;
+    // ≤79 ใบ: 150฿ / 80-99 ใบ: 170฿ / ≥100 ใบ: 200฿ ต่อ 100 ใบ (หรือส่วนของ 100)
+    if (qty <= 79) return 150;
+    if (qty <= 99) return 170;
     return Math.ceil(qty / 100) * 200;
   }
 }
