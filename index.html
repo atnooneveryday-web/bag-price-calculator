@@ -317,10 +317,37 @@ input[type=number]:focus { border-color: #FAB95B; }
   align-items: center;
   justify-content: center;
 }
-.line-btn:hover { 
-  background: #05B34C; 
-  border-color: #05B34C; 
-  box-shadow: 0 4px 15px rgba(6, 199, 85, 0.3); 
+.line-btn:hover {
+  background: #05B34C;
+  border-color: #05B34C;
+  box-shadow: 0 4px 15px rgba(6, 199, 85, 0.3);
+}
+
+.copy-btn {
+  flex: 1.5;
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px solid #1A3263;
+  background: #1A3263;
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.copy-btn:hover {
+  background: #0F2147;
+  border-color: #0F2147;
+  box-shadow: 0 4px 15px rgba(26, 50, 99, 0.3);
+}
+.copy-btn.copied {
+  background: #28a745;
+  border-color: #28a745;
 }
 
 .canvas-only-note {
@@ -561,6 +588,9 @@ input[type=number]:focus { border-color: #FAB95B; }
     </div>
     <div class="action-buttons">
       <button class="reset-btn" id="resetBtn">🔄 คำนวณใหม่</button>
+      <button class="copy-btn" id="copyBtn">
+        <span id="copyBtnLabel">📋 คัดลอกสรุป</span>
+      </button>
       <button class="line-btn" id="lineShareBtn">
         <span id="lineShareLabel">ส่งสรุปไปที่ LINE</span>
       </button>
@@ -636,7 +666,7 @@ const T = {
     shippingNote: '* ค่าส่งเป็นค่าประมาณ อาจแตกต่างตามพื้นที่',
     priceUnit: ' บาท/ใบ', priceBaht: ' บาท', priceBase: 'กระเป๋า', priceAddon: 'ออปชั่น',
     sumShape: 'ทรง', sumSize: 'ไซส์', sumAddons: 'ออปชั่นเสริม',
-    resetBtn: '🔄 คำนวณใหม่', lineBtn: 'ส่งสรุปไปที่ LINE',
+    resetBtn: '🔄 คำนวณใหม่', lineBtn: 'ส่งสรุปไปที่ LINE (มือถือ)', copyBtn: '📋 คัดลอกสรุป', copyBtnDone: '✅ คัดลอกแล้ว!',
     footerBig: '★ ผลิตหลังยืนยันแบบและชำระยอดเต็มเท่านั้น ★',
     footerItem1: 'เรทส่งเริ่ม 30 ใบขึ้นไปต่อ 1 แบบ',
     footerItem2: 'ราคานี้สำหรับลูกค้าที่มีไฟล์พร้อมพิมพ์/ส่งรูปมาพิมพ์เองเท่านั้น',
@@ -697,7 +727,7 @@ const T = {
     shippingNote: '* Shipping is estimated, may vary by area',
     priceUnit: ' ฿/pc', priceBaht: ' ฿', priceBase: 'Bag', priceAddon: 'Add-on',
     sumShape: 'Shape', sumSize: 'Size', sumAddons: 'Add-ons',
-    resetBtn: '🔄 Reset', lineBtn: 'Send to LINE',
+    resetBtn: '🔄 Reset', lineBtn: 'Send to LINE (Mobile)', copyBtn: '📋 Copy Summary', copyBtnDone: '✅ Copied!',
     footerBig: '★ Production starts after design confirmation & full payment only ★',
     footerItem1: 'Minimum order: 30 pcs per design',
     footerItem2: 'Prices for customers with print-ready files only',
@@ -780,6 +810,7 @@ function applyStaticLang() {
   $('shippingNote').textContent = t('shippingNote');
   $('resetBtn').textContent = t('resetBtn');
   $('lineShareLabel').textContent = t('lineBtn');
+  $('copyBtnLabel').textContent = t('copyBtn');
   $('footerBig').textContent = t('footerBig');
   $('footerItem1').textContent = t('footerItem1');
   $('footerItem2').textContent = t('footerItem2');
@@ -1728,7 +1759,7 @@ $('qtyPlus').addEventListener('click', () => {
   updateQtyHint();
 });
 
-$('lineShareBtn').addEventListener('click', () => {
+function buildShareMsg() {
   let msg = t('lineHeader');
   msg += $('rSummary').textContent;
   msg += `\n\n${t('lineUnitPriceLabel')}: ${$('rPriceUnit').textContent}`;
@@ -1738,9 +1769,57 @@ $('lineShareBtn').addEventListener('click', () => {
   msg += `\n${t('lineBagTotalLabel')}: ${$('rTotal').textContent}`;
   msg += `\n${t('lineShippingLabel')}: ${$('rShipping').textContent}`;
   msg += `\n${t('lineGrandTotalLabel')}: ${$('rGrandTotal').textContent}`;
-  const url = `https://line.me/R/oaMessage/@ATNOON/?message=${encodeURIComponent(msg)}`;
+  return msg;
+}
+
+$('lineShareBtn').addEventListener('click', () => {
+  const url = `https://line.me/R/oaMessage/@ATNOON/?message=${encodeURIComponent(buildShareMsg())}`;
   window.open(url, '_blank');
 });
+
+$('copyBtn').addEventListener('click', () => {
+  const msg = buildShareMsg();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(msg).then(() => {
+      showCopyDone();
+    }).catch(() => fallbackCopy(msg));
+  } else {
+    fallbackCopy(msg);
+  }
+});
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); showCopyDone(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+function showCopyDone() {
+  const btn = $('copyBtn');
+  const lbl = $('copyBtnLabel');
+  btn.classList.add('copied');
+  lbl.textContent = t('copyBtnDone');
+  setTimeout(() => {
+    btn.classList.remove('copied');
+    lbl.textContent = t('copyBtn');
+  }, 2000);
+}
+
+// On desktop: show copy btn prominently; on mobile: show LINE btn first
+(function detectDevice() {
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const lineBtn = $('lineShareBtn');
+  const copyBtn = $('copyBtn');
+  if (!isMobile) {
+    // Desktop: swap order so copy is after reset, LINE button moves to end
+    lineBtn.style.flex = '1';
+    copyBtn.style.flex = '1.5';
+  }
+})();
 
 function openLightbox(src, caption) {
   $('lightbox-img').src = src;
