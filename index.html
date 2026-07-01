@@ -676,6 +676,8 @@ const T = {
     lineHeader: '🛒 สรุปออเดอร์จากเว็บ\n\n', lineUnitPriceLabel: 'ราคาต่อใบ',
     lineBagTotalLabel: 'ยอดรวมค่ากระเป๋า', lineShippingLabel: '📦 ค่าส่ง (ประมาณ)',
     lineGrandTotalLabel: '🧾 รวมค่ากระเป๋า+ค่าส่ง',
+    shareBagTotal: 'ยอดรวมค่ากระเป๋า', shareShipping: 'ค่าส่ง (ประมาณ)',
+    shareGrandTotal: 'รวมยอดชำระทั้งหมด', shareConfirm: 'ผลิตหลังยืนยันแบบและชำระยอดเต็มเท่านั้น',
     zoomHint: '🔍 แตะรูปเพื่อดูขยาย',
     subLabels: { exp:'ขยายก้น', noexp:'ไม่ขยายก้น', round:'สายกลมขาว', fish:'สายก้างปลาแบนครีม' },
     fabricLabels: { '8oz':'ผ้าดิบลายสอง 8 oz.', '11oz':'ผ้าดิบแคนวาส 11 oz. / ผ้าแคนวาสฟอก 10 oz.' },
@@ -737,6 +739,8 @@ const T = {
     lineHeader: '🛒 Order Summary (Web)\n\n', lineUnitPriceLabel: 'Unit Price',
     lineBagTotalLabel: 'Bag Total', lineShippingLabel: '📦 Shipping (est.)',
     lineGrandTotalLabel: '🧾 Bag + Shipping Total',
+    shareBagTotal: 'Bag Total', shareShipping: 'Shipping (est.)',
+    shareGrandTotal: 'Total Payment', shareConfirm: 'Production starts after design confirmation & full payment only',
     zoomHint: '🔍 Tap image to enlarge',
     subLabels: { exp:'Expandable Bottom', noexp:'Flat Bottom', round:'White Round Cord', fish:'Cream Flat Fishbone Cord' },
     fabricLabels: { '8oz':'Unbleached Canvas 8 oz.', '11oz':'Raw Canvas 11 oz. / Bleached Canvas 10 oz.' },
@@ -962,11 +966,12 @@ function getSubLabels()    { return t('subLabels'); }
 
 // ADDONS_CONFIG is now language-aware via getAddonsConfig()
 
-let S = { 
-  shape: null, sub: null, size: null, fabric: null, 
+let S = {
+  shape: null, sub: null, size: null, fabric: null,
   strapPrintPrice: null, strapPrintLabel: null, strapSubPrice: null, strapSubLabel: null,
-  addons: {}, addonLabels: {} 
+  addons: {}, addonLabels: {}
 };
+let addonDetails = []; // module-level, set in renderResult(), read in buildShareMsg()
 
 const $ = id => document.getElementById(id);
 function lock(id, v=true) { $(id).classList.toggle('locked', v); }
@@ -1617,46 +1622,69 @@ function renderResult() {
   const shapeName = getShapes().find(sh => sh.key === S.shape)?.label || S.shape;
   const subLabels = getSubLabels();
   const fabricLabels = getFabricLabels();
-  let sum = `${t('sumShape')}: ${shapeName}`;
-  if (S.sub) sum += ` · ${subLabels[S.sub]}`;
 
-  let baseInfo = `${t('sumSize')}: ${S.size}${t('sizeUnit')} · ${fabricLabels[S.fabric]}`;
-  const activeAddons = [];
+  // Strip number prefix: "1.1 Tote แนวตั้ง" → "Tote แนวตั้ง"
+  const shapeClean = shapeName.replace(/^\d+\.\d+\s+/, '');
+  const subClean = S.sub ? subLabels[S.sub] : '';
+
+  // Fabric: short label (first part before " / ")
+  const fabricFull = fabricLabels[S.fabric] || '';
+  const fabricShort = fabricFull.split(' / ')[0];
+
+  const year = new Date().getFullYear();
+  const isTH = LANG === 'th';
+
+  // ── Collect addon details ──────────────────────────────────────────────
+  addonDetails = [];
 
   if (S.strapPrintLabel) {
-    let cleanLabel = S.strapPrintLabel.split(' (+')[0].replace(/5\.\d+\s/, '');
-    const strapWhiteLabel = T['th'].strapWhite.split(' (')[0]; // "5.1 สายกระเป๋าสีขาว"
-    const isWhiteStrap = cleanLabel.includes('สายกระเป๋าสีขาว') || cleanLabel.includes('White Strap');
-    const isNoPrint = cleanLabel.includes('ไม่พิมพ์') || cleanLabel.includes('no print') || cleanLabel.includes('No print');
-    const isNone = cleanLabel.includes('ไม่มี') || cleanLabel.includes('No Wrist');
-    if (isWhiteStrap) {
-      baseInfo += ` · ${cleanLabel}`;
-    } else if (!isNoPrint && !isNone) {
-      activeAddons.push(cleanLabel);
+    let rawLabel = S.strapPrintLabel.split(' (+')[0].replace(/5\.\d+\s+/, '').trim();
+    const isWhiteStrap = rawLabel.includes('สายกระเป๋าสีขาว') || rawLabel.includes('White Strap') || rawLabel.includes('White/Unprinted');
+    const isNoPrint = rawLabel.includes('ไม่พิมพ์') || rawLabel.includes('no print') || rawLabel.includes('No print') || rawLabel.includes('Unprinted');
+    const isNone = rawLabel.includes('ไม่มี') || rawLabel.includes('No Wrist');
+    if (!isNone && !isNoPrint) {
+      if (isWhiteStrap) {
+        addonDetails.push({ label: rawLabel, price: 0 });
+      } else {
+        // Add "สายกระเป๋า" context when label doesn't already mention strap
+        const displayLabel = isTH && !rawLabel.includes('สาย')
+          ? rawLabel + 'สายกระเป๋า'
+          : rawLabel;
+        addonDetails.push({ label: displayLabel, price: S.strapPrintPrice || 0 });
+      }
     }
   }
 
   if (S.strapSubLabel) {
-    const isNoPrint = S.strapSubLabel.includes('ไม่พิมพ์') || S.strapSubLabel.includes('no print') || S.strapSubLabel.includes('No print');
+    const isNoPrint = S.strapSubLabel.includes('ไม่พิมพ์') || S.strapSubLabel.includes('no print') || S.strapSubLabel.includes('No print') || S.strapSubLabel.includes('Unprinted');
     const isNone = S.strapSubLabel.includes('ไม่มี') || S.strapSubLabel.includes('No Wrist');
     if (!isNoPrint && !isNone) {
-      let subL = S.strapSubLabel.split(' (+')[0];
-      activeAddons.push(subL);
+      let subL = S.strapSubLabel.split(' (+')[0].trim();
+      addonDetails.push({ label: subL, price: S.strapSubPrice || 0 });
     }
   }
 
   const addonNoneVal = t('addonNone');
   Object.entries(S.addonLabels).forEach(([aId, l]) => {
     if (l && l !== addonNoneVal && !l.includes('ไม่มี') && !l.includes('ปกติ')) {
-      activeAddons.push(l.split(' (+')[0].replace(/6\.\d+(\.\d+)?\s/, ''));
+      const priceMatch = l.match(/\+(\d+)฿/);
+      const adPrice = priceMatch ? parseInt(priceMatch[1]) : 0;
+      const adLabel = l.split(' (+')[0].replace(/6\.\d+(\.\d+)?\s+/, '').trim();
+      addonDetails.push({ label: adLabel, price: adPrice });
     }
   });
 
-  sum += `\n${baseInfo}`;
-  if (activeAddons.length > 0) {
-    sum += `\n${t('sumAddons')}: ` + activeAddons.join(', ');
-  }
-  sum += `\n${getTierLabel(qty)}`;
+  // ── Build summary text ─────────────────────────────────────────────────
+  const perPcUnit = isTH ? ' บาท/ใบ' : ' ฿/pc';
+
+  const bagPrefix = isTH ? 'กระเป๋า ' : 'Bag ';
+  let sum = `${bagPrefix}${shapeClean}${subClean ? ` (${subClean})` : ''} · ${fabricShort}`;
+  sum += `\n${isTH ? 'ไซส์' : 'Size'} ${S.size}${t('sizeUnit')} · ${isTH ? 'เรท' : 'Rate'} ${qty} ${isTH ? 'ใบ/แบบ' : 'pcs/design'} · ${isTH ? 'ปี' : 'Year'} ${year}`;
+
+  addonDetails.forEach(ad => {
+    sum += ad.price > 0 ? `\n${ad.label} +${ad.price}${perPcUnit}` : `\n${ad.label}`;
+  });
+
   sum += `\n${t('printIncl')}`;
 
   $('rSummary').textContent = sum;
@@ -1760,15 +1788,29 @@ $('qtyPlus').addEventListener('click', () => {
 });
 
 function buildShareMsg() {
+  const qty = parseInt($('qtyInput').value) || 0;
+  const isTH = LANG === 'th';
+
+  const unitPrice = $('rPriceUnit').textContent;
+  const detail    = $('rPriceDetail').textContent;
+  const total     = $('rTotal').textContent;
+  const shipping  = $('rShipping').textContent;
+  const grand     = $('rGrandTotal').textContent;
+
   let msg = t('lineHeader');
+  // Product description block
   msg += $('rSummary').textContent;
-  msg += `\n\n${t('lineUnitPriceLabel')}: ${$('rPriceUnit').textContent}`;
-  if ($('rPriceDetail').textContent) {
-      msg += `\n${$('rPriceDetail').textContent}`;
-  }
-  msg += `\n${t('lineBagTotalLabel')}: ${$('rTotal').textContent}`;
-  msg += `\n${t('lineShippingLabel')}: ${$('rShipping').textContent}`;
-  msg += `\n${t('lineGrandTotalLabel')}: ${$('rGrandTotal').textContent}`;
+
+  // Pricing section
+  msg += `\n\n💰 ${t('lineUnitPriceLabel')}: ${unitPrice}${detail ? ' ' + detail : ''}`;
+  msg += isTH
+    ? `\n${t('shareBagTotal')}: ${total} (${qty} ใบ)`
+    : `\n${t('shareBagTotal')}: ${total} (${qty} pcs)`;
+  msg += '\n─────────────────────────────────';
+  msg += `\n${t('shareShipping')}: ${shipping}`;
+  msg += `\n${t('shareGrandTotal')}: ${grand}`;
+  msg += `\n${t('shareConfirm')}`;
+
   return msg;
 }
 
