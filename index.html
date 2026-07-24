@@ -1642,9 +1642,13 @@ function renderResult() {
     const isWhiteStrap = rawLabel.includes('สายกระเป๋าสีขาว') || rawLabel.includes('White Strap') || rawLabel.includes('White/Unprinted');
     const isNoPrint = rawLabel.includes('ไม่พิมพ์') || rawLabel.includes('no print') || rawLabel.includes('No print') || rawLabel.includes('Unprinted');
     const isNone = rawLabel.includes('ไม่มี') || rawLabel.includes('No Wrist');
-    if (!isNone && !isNoPrint) {
-      if (isWhiteStrap) {
-        addonDetails.push({ label: rawLabel, price: 0 });
+    if (!isNone) {
+      if (isWhiteStrap || isNoPrint) {
+        // Always show white/unprinted strap — format "X/Y" → "X (Y)"
+        const whiteLabel = rawLabel.includes('/')
+          ? rawLabel.replace('/', ' (') + ')'
+          : rawLabel;
+        addonDetails.push({ label: whiteLabel, price: 0 });
       } else {
         // Add "สายกระเป๋า" context when label doesn't already mention strap
         const displayLabel = isTH && !rawLabel.includes('สาย')
@@ -1678,8 +1682,11 @@ function renderResult() {
   const perPcUnit = isTH ? ' บาท/ใบ' : ' ฿/pc';
 
   const bagPrefix = isTH ? 'กระเป๋า ' : 'Bag ';
+  const TIER_MINS = [30, 100, 200, 300, 500, 1000];
+  const tierMinQty = TIER_MINS[getTierIndex(qty)];
+
   let sum = `${bagPrefix}${shapeClean}${subClean ? ` (${subClean})` : ''} · ${fabricShort}`;
-  sum += `\n${isTH ? 'ไซส์' : 'Size'} ${S.size}${t('sizeUnit')} · ${isTH ? 'เรท' : 'Rate'} ${qty} ${isTH ? 'ใบ/แบบ' : 'pcs/design'} · ${isTH ? 'ปี' : 'Year'} ${year}`;
+  sum += `\n${isTH ? 'ไซส์' : 'Size'} ${S.size}${t('sizeUnit')} · ${isTH ? 'เรท' : 'Rate'} ${tierMinQty} ${isTH ? 'ใบ/แบบ' : 'pcs/design'} · ${isTH ? 'ปี' : 'Year'} ${year}`;
 
   addonDetails.forEach(ad => {
     sum += ad.price > 0 ? `\n${ad.label} +${ad.price}${perPcUnit}` : `\n${ad.label}`;
