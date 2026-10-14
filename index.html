@@ -648,7 +648,8 @@ const T = {
     fabric11oz: '4.2 ผ้าดิบแคนวาส 11 oz.', fabricBleach: '4.3 ผ้าแคนวาสฟอก 10 oz.',
     fabricNote: 'หมายเหตุ: ผ้าดิบแคนวาส 11 oz. และ ผ้าแคนวาสฟอก 10 oz. ราคาเดียวกัน',
     canvasOnly: 'ทรงกล่องใช้ได้เฉพาะ ผ้าดิบแคนวาส 11 oz. / ผ้าแคนวาสฟอก 10 oz. เท่านั้น ✓',
-    strapWhite: '5.1 สายกระเป๋าสีขาว/ไม่พิมพ์สี', strapColor: '5.2 พิมพ์สี (+10฿)', strapColor2: '5.3 พิมพ์ 2 สี เส้นละสี (+15฿)',
+    strapWhite: '5.1 สายกระเป๋าไม่พิมพ์สี (สีขาว)', strapSolid: '5.2 สายกระเป๋าสีล้วน (+5฿)', strapColor: '5.3 สายกระเป๋าพิมพ์ลวดลาย (+10฿)', strapColor2: '5.4 สายสองเส้นคนละสี (+15฿)',
+    strapCmpTitle: 'ราคาต่อใบ แยกตามแบบสายกระเป๋า:', strapCmpWhite: 'สายไม่พิมพ์สี (สีขาว)', strapCmpSolid: 'สายสีล้วน', strapCmpPattern: 'สายพิมพ์ลวดลาย', strapCmpTwo: 'สายสองเส้นคนละสี', strapCmpUnit: ' บาท/ใบ',
     strapNoWrist: '5.1 ไม่มีสายคล้องข้อมือ', strapWrist: '5.2 มีสายคล้องข้อมือ (+5฿)',
     strapWristSub: '↳ การพิมพ์สีสายคล้อง', strapWristWhite: 'สายกระเป๋าสีขาว/ไม่พิมพ์สี', strapWristColor: 'พิมพ์สี (+5฿)',
     addonNone: '— ไม่เพิ่ม —', addonNoAddons: 'ไม่มีออปชั่นเสริมสำหรับทรงนี้',
@@ -711,7 +712,8 @@ const T = {
     fabric11oz: '4.2 Raw Canvas 11 oz.', fabricBleach: '4.3 Bleached Canvas 10 oz.',
     fabricNote: 'Note: Canvas 11 oz. and Bleached Canvas 10 oz. are the same price',
     canvasOnly: 'Box shape: Canvas / Bleached Canvas only ✓',
-    strapWhite: '5.1 White Strap (no print)', strapColor: '5.2 Color Print (+10฿)', strapColor2: '5.3 Two-Color Print, one per strap (+15฿)',
+    strapWhite: '5.1 Unprinted Strap (White)', strapSolid: '5.2 Solid-Color Strap (+5฿)', strapColor: '5.3 Patterned Print Strap (+10฿)', strapColor2: '5.4 Two Straps, Different Colors (+15฿)',
+    strapCmpTitle: 'Price per piece by strap type:', strapCmpWhite: 'Unprinted strap (white)', strapCmpSolid: 'Solid-color strap', strapCmpPattern: 'Patterned print strap', strapCmpTwo: 'Two straps, different colors', strapCmpUnit: ' ฿/pc',
     strapNoWrist: '5.1 No Wrist Strap', strapWrist: '5.2 With Wrist Strap (+5฿)',
     strapWristSub: '↳ Wrist Strap Printing', strapWristWhite: 'White Strap (no print)', strapWristColor: 'Color Print (+5฿)',
     addonNone: '— None —', addonNoAddons: 'No add-ons available for this shape',
@@ -1169,13 +1171,17 @@ function renderStep5(preserve = false) {
         { l: t('strapWhite'), v: 0,
           img: 'https://drive.google.com/thumbnail?id=1DIexNJip_XDzAZs6DaZEkjJnNh0urmZW&sz=w300',
           full: 'https://drive.google.com/thumbnail?id=1DIexNJip_XDzAZs6DaZEkjJnNh0urmZW&sz=w1200' },
-        { l: t('strapColor'), v: 10,
+        { l: t('strapSolid'), v: 5,
           img: 'https://drive.google.com/thumbnail?id=180e9_ICnxGEPATIn9rsRRkAXWOWrktfv&sz=w300',
-          full: 'https://drive.google.com/thumbnail?id=180e9_ICnxGEPATIn9rsRRkAXWOWrktfv&sz=w1200' }
+          full: 'https://drive.google.com/thumbnail?id=180e9_ICnxGEPATIn9rsRRkAXWOWrktfv&sz=w1200' },
+        { l: t('strapColor'), v: 10,
+          img: 'https://drive.google.com/thumbnail?id=1BTzzxOH7Yc-PaxDoGadie9Oc1tqbSFKy&sz=w300',
+          full: 'https://drive.google.com/thumbnail?id=1BTzzxOH7Yc-PaxDoGadie9Oc1tqbSFKy&sz=w1200' }
       ];
     } else {
       opts = [
         { l: t('strapWhite'), v: 0 },
+        { l: t('strapSolid'), v: 5 },
         { l: t('strapColor'), v: 10 },
         { l: t('strapColor2'), v: 15 }
       ];
@@ -1693,6 +1699,19 @@ function renderResult() {
   addonDetails.forEach(ad => {
     sum += ad.price > 0 ? `\n${ad.label} +${ad.price}${perPcUnit}` : `\n${ad.label}`;
   });
+
+  // Strap price comparison (all shapes with main strap options, not pencil)
+  if (['tote_v','tote_h','beach','yeti','box'].includes(S.shape) && S.strapPrintPrice !== null) {
+    const otherAddons = addonPrice - (S.strapPrintPrice || 0);
+    const cmp = [
+      ['strapCmpWhite', 0], ['strapCmpSolid', 5], ['strapCmpPattern', 10], ['strapCmpTwo', 15]
+    ];
+    sum += `\n\n${t('strapCmpTitle')}`;
+    cmp.forEach(([k, v]) => {
+      sum += `\n${v === S.strapPrintPrice ? '✓' : '•'} ${t(k)} ${(basePrice + otherAddons + v).toLocaleString()}${t('strapCmpUnit')}`;
+    });
+    sum += '\n';
+  }
 
   sum += `\n${t('printIncl')}`;
 
