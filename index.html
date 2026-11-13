@@ -1401,7 +1401,7 @@ function renderAddons(preserve = false) {
             const opt = document.createElement('option');
             opt.value = o.val;
             opt.textContent = o.l;
-            opt.dataset.label = 'กป.เล็ก ' + o.l.split(' (+')[0];
+            opt.dataset.label = 'กระเป๋าเล็กด้านใน ' + o.l.split(' (+')[0] + ' (+' + o.val + '฿)';
             fabSel.appendChild(opt);
           });
           if (isPreserving && S.addons['inner_pocket_fab'] !== undefined) {
@@ -1420,7 +1420,7 @@ function renderAddons(preserve = false) {
         printLabel.style.fontSize = '0.82rem';
         printLabel.textContent = t('innerPrint');
         const printSel = document.createElement('select');
-        printSel.innerHTML = `<option value="0" data-label="">${t('innerNoPrint')}</option><option value="10" data-label="พิมพ์ลายกป.เล็ก">${t('innerDoPrint')}</option>`;
+        printSel.innerHTML = `<option value="0" data-label="__noprint__">${t('innerNoPrint')}</option><option value="10" data-label="พิมพ์ลายกระเป๋าเล็กด้านใน (+10฿)">${t('innerDoPrint')}</option>`;
         printWrap.appendChild(printLabel);
         printWrap.appendChild(printSel);
         subGroup.appendChild(printWrap);
@@ -1433,7 +1433,7 @@ function renderAddons(preserve = false) {
             S.addonLabels['inner_pocket_fab'] = fabOpt ? fabOpt.dataset.label : '';
             S.addons['inner_pocket_print'] = parseInt(printSel.value) || 0;
             const printOpt = printSel.options[printSel.selectedIndex];
-            S.addonLabels['inner_pocket_print'] = (printOpt && printSel.value !== "0") ? printOpt.dataset.label : '';
+            S.addonLabels['inner_pocket_print'] = printOpt ? printOpt.dataset.label : '';
           } else {
             subGroup.classList.add('hidden');
             S.addons['inner_pocket_fab'] = 0;
@@ -1681,7 +1681,9 @@ function renderResult() {
     if (l && l !== addonNoneVal && !l.includes('ไม่มี') && !l.includes('ปกติ')) {
       const priceMatch = l.match(/\+(\d+)฿/);
       const adPrice = priceMatch ? parseInt(priceMatch[1]) : 0;
-      const adLabel = l.split(' (+')[0].replace(/6\.\d+(\.\d+)?\s+/, '').trim();
+      let adLabel = l.split(' (+')[0].replace(/6\.\d+(\.\d+)?\s+/, '').trim();
+      if (aId === 'label') adLabel = (isTH ? 'เลเบิล' : 'Label') + (adLabel === 'มี' || adLabel === 'Add label' ? (isTH ? ' (ลูกค้าส่งมาเอง)' : ' (customer-supplied)') : ' ' + adLabel);
+      if (aId === 'inner_pocket_print' && l === '__noprint__') { adLabel = 'กระเป๋าเล็กด้านใน ไม่พิมพ์ลาย'; }
       addonDetails.push({ label: adLabel, price: adPrice });
     }
   });
